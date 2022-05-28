@@ -35,10 +35,10 @@ global.packname = 'Loli-Mdོ'
 global.author = 'By Zidni Ganz'
 global.usedPrefix = ['']
 global.prefa = ['','!','.','🐦','🐤','🗿']
-global.wet = 'Tunggu Bentar Gann'
+global.wet = '*Scraping Metadata...*'
 global.end ='Limit Harian Kamu Sudah Habis Silikan Claim Harian Atau Buy Limit Atau Tunggu Sampai Limit Di riset(Jam 12 Malam)!'
 global.mess = {
-    success: 'Nih Gann',
+    success: '*Nih Gann*',
     admin: 'Lu Admin!',
     botAdmin: 'Gua Bukan Admin Gann',
     owner: 'Lu Bukan Owner Gua Gann',
