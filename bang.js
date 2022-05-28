@@ -413,7 +413,7 @@ break
 	break
         
                 case 'hidetag': {
-                 if (!(isGroupAdmins || isGroupOwner )) throw mess.admin                  
+                 if (!(isGroupAdmins || isGroupOwner )) return m.reply( mess.admin)              
             zidni.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })
             }
             break
@@ -446,7 +446,7 @@ const isUrl = str => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-
 *Diterbitkan:* ${result.publish}
 *Link:* ${result.mp3}
 \n_Tunggu Upload Musiknya ya.._`.trim()
-    zidni.sendFile(m.chat, result.img, 'error.jpg', pesan, m, false, { thumbnail: Buffer.alloc(0) })
+     zidni.sendMessage(m.chat, { image: {url:result.img}, { quoted: m })
   zidni.sendMessage(from, { audio: {url : result.mp3}, mimetype: 'audio/mp4'}, {quoted: m})}
       break
     
@@ -636,7 +636,7 @@ case 'ttaud':	case 'ttaudio': case 'tiktokaudio':{
 		db.data.users[m.sender].limit -= 1
     		var mulaikah = args.join(' ')
 		m.reply(wet)
-                  const { y2mateA, y2mateV } = require('./lib/y2mate3')
+                  const { y2mateA, y2mateV } = require('./lib/y2mate4')
          teks = args.join(' ')    
            let res = await y2mateA(teks).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')

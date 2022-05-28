@@ -38,12 +38,12 @@ global.prefa = ['','!','.','🐦','🐤','🗿']
 global.wet = '*Scraping Metadata...*'
 global.end ='Limit Harian Kamu Sudah Habis Silikan Claim Harian Atau Buy Limit Atau Tunggu Sampai Limit Di riset(Jam 12 Malam)!'
 global.mess = {
-    success: '*Nih Gann*',
+    success: '*Status 200*',
     admin: 'Lu Admin!',
     botAdmin: 'Gua Bukan Admin Gann',
     owner: 'Lu Bukan Owner Gua Gann',
     group: 'Khusus Group Gan',
-    wait: 'Tunggu Bentar Gann',
+    wait: '*Scraping Metadata...*',
     }
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
