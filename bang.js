@@ -319,6 +319,22 @@ zidni.sendMessage(from,{
 	
              }
 break
+case 'waifu':{			
+					 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
+		db.data.users[m.sender].limit -= 1		
+					m.reply(mess.wait)
+						var buta = [{buttonId: `${command}`, buttonText: { displayText: "Get Again Pict" }, type: 1 }]			
+		        	zidni.sendMessage(from, { caption: "Nieh Banh", image: { url: `https://yx-api.herokuapp.com/api/sfw/${command}`}, buttons: buta, footer: 'Pencet tombol dibawah untuk foto selanjutnya' }, { quoted: m})			  
+                   }
+                   		break		
+                   		    case 'storyanim': case 'storyanime':{
+        reply(wet)
+        let yo = await fetchJson(`https://api.akuari.my.id/anime/storyanime`)        
+         let medi = await getBuffer(yo.medias[0].url)
+      let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
+                let buttonMessage = {video: medi ,caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
+                zidni.sendMessage(from, buttonMessage, { quoted: m})}  
+            break
            case'stiker':case 's': case 'stickergif': case 'sgif': {
             if (!quoted) return m.reply( `Balas Video/Image Dengan Caption ${prefix + command}`)
                     if (/image/.test(mime)) {
@@ -446,7 +462,7 @@ const isUrl = str => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-
 *Diterbitkan:* ${result.publish}
 *Link:* ${result.mp3}
 \n_Tunggu Upload Musiknya ya.._`.trim()
-     zidni.sendMessage(m.chat, { image: {url:result.img}, { quoted: m })
+     zidni.sendMessage(m.chat, { image: {url:result.img}, quoted: m })
   zidni.sendMessage(from, { audio: {url : result.mp3}, mimetype: 'audio/mp4'}, {quoted: m})}
       break
     
