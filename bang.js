@@ -448,7 +448,7 @@ case 'waifu':{
                    }
                    		break		
                    		case 'zero':{
-                   		let yo await getBuffer(`https://api.akuari.my.id/search/konachan?query=${q}`)
+                   		let yo = await getBuffer(`https://api.akuari.my.id/search/konachan?query=${q}`)
                    		reply(wet)
                    		    let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
                 let buttonMessage = {image: yo,caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
