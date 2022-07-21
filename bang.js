@@ -179,7 +179,7 @@ var bod = m.body.split(" ");
 				m.reply(mess.wait)
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 5
-				const { y2mateA, y2mateV } = require('./lib/y2mate')
+				const { y2mateA, y2mateV } = require('./lib/y2mate4')
     let res = await y2mateV(link).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')})
             zidni.sendMessage(m.chat, {video: { url:res[0].link },
@@ -197,7 +197,7 @@ var bod = m.body.split(" ");
                     m.reply(mess.wait)
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 5
-				const { y2mateA, y2mateV } = require('./lib/y2mate')
+				const { y2mateA, y2mateV } = require('./lib/y2mate4')
     let res = await y2mateV(link).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')})
             zidni.sendMessage(m.chat, {video: { url:res[0].link },
