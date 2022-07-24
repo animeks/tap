@@ -243,7 +243,7 @@ let anuu = await getBuffer (anu.result.SD)
 		m.reply(mess.wait)
 		if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 5
-       let waw = await fetchJson(`https://zenzapis.xyz/downloader/cocofun?apikey=${zen}&url=${link}`) 	
+       let waw = await fetchJson(`https://zenzapis.xyz/downloader/cocofun?apikey=c3d07f852d&url=${link}`) 	
 			   let p = waw.result
 			   let qp = await getBuffer(p.url)
 			   await zidni.sendMessage(m.chat, {video: qp, caption: waw.result.title},{ quoted: m })					 				  }
