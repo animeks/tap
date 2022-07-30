@@ -28,7 +28,7 @@ global.available = true
 global.autoLevel = true,
 global.limitawal = {
     premium: "unlimited",
-    free: "50",
+    free: "100",
     }
 global.owner = ['6281215205433']
 global.packname = 'Loli-Mdོ'

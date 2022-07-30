@@ -169,13 +169,13 @@ var bod = m.body.split(" ");
 					if (budy.match(`youtu.be`)){
 				m.reply(mess.wait)
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-				const { y2mateA, y2mateV } = require('./lib/y2mate4')
+		const { y2mateA, y2mateV } = require('./lib/y2mate4')
     let res = await y2mateV(link).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')})
             zidni.sendMessage(m.chat, {video: { url:res[0].link },
                     caption: `Youtube Quality 480p\n\n`+res[0].judul}, { quoted: m })
-                }
+             	db.data.users[m.sender].limit -= 5			
+                   }
                 if(budy.match('pinterest.com')){
                 m.reply(wet)
                 let anu = await fetchJson(`https://api.akuari.my.id/downloader/pindl?link=${link}`)
@@ -194,22 +194,19 @@ var bod = m.body.split(" ");
                 zidni.sendMessage(m.chat, {video: { url: anu.mp4.result},
                     caption: 'Youtube Shrots Quality '+anu.mp4.quality+'\n\n'+anu.mp4.title}, { quoted: m })
                     }
-                    if (budy.match(`youtube.com/watch?v=`)){
-                    if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
+                    if (budy.match(`youtube.com/watch?v=`)){                   
                     m.reply(mess.wait)
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-				const { y2mateA, y2mateV } = require('./lib/y2mate4')
+		const { y2mateA, y2mateV } = require('./lib/y2mate4')
     let res = await y2mateV(link).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')})
             zidni.sendMessage(m.chat, {video: { url:res[0].link },
                     caption: `Youtube Quality 480p\n\n`+res[0].judul}, { quoted: m })
-                }
+            	db.data.users[m.sender].limit -= 5			
+                    }
 if (/^.*mediafire.com/i.test(m.text)){
 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 10
-const { mediafiredl } = require('@bochilteam/scraper')
+	const { mediafiredl } = require('@bochilteam/scraper')
    let res = await mediafiredl(link)
    m.reply(wet)
     let { url, url2, filename, ext, aploud, filesize, filesizeH } = res
@@ -221,6 +218,7 @@ const { mediafiredl } = require('@bochilteam/scraper')
 `.trim()
     m.reply(caption)
     zidni.sendMessage(from, { document: { url: url }, fileName: filename, mimetype: ext}, { quoted: m })
+	db.data.users[m.sender].limit -= 10
 }
 if (/^.*twitter.com/i.test(m.text)){
  let anu= await fetchJson(`https://yx-api.herokuapp.com/api/download/twitterdl?url=${link}`)
@@ -229,19 +227,58 @@ let anuu = await getBuffer (anu.result.SD)
     await zidni.sendMessage(m.chat, { video: anuu,caption: `High Quality\n${anu.result.desc}`  }, { quoted: m })    }
       if (budy.match(`tiktok.com/`)){
    if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
- m.reply(mess.wait)
+		 m.reply(mess.wait)
  	   zidni.sendMessage(m.chat, {video: { url: `https://api.akuari.my.id/downloader/tiktoknowm?link=${link}` },
                     caption: 'Tiktok No Watermark'}, { quoted: m })
-                    }
+                 db.data.users[m.sender].limit -= 5
+                       }
+                    
         	  if (/https?:\/\/(fb\.watch|(www\.|web\.|m\.)?facebook\.com)/i.test(m.text)){
 		 m.reply(mess.wait)
 		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-		let anu = await fetchJson(`https://api.akuari.my.id/downloader/fbdl?link=${link}`)
-     zidni.sendMessage(m.chat, {video: { url: anu.medias[0].url},
-                    caption: 'Facebook '+`${anu.medias[0].quality} `+`Size ${anu.medias[0].formattedSize}`}, { quoted: m })
-                    }
+		function clockString(ms) {
+  let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000)
+  let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
+  let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
+  return [h, m, s].map(v => v.toString().padStart(2, 0) ).join(':')
+}
+  let res = await fetch(global.api('xteam', '/dl/fb', {
+    url: args[0]
+  }, 'APIKEY'))
+  if (res.status !== 200) {
+    res.text()
+    throw res.status
+  }
+  let json = await res.json()
+  if (!json.result) throw json
+  let { name, author, description, uploadDate, duration, url, isFamilyFriendly, genre, keywords, contentSize, videoQuality, commentCount } = json.result
+  let { name: authorname, url: authorlink } = author || {}
+  let dateConfig = {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }
+  let unknown = '_Unknown_'
+  let none = '_None_'
+  let caption = `
+Konten${isFamilyFriendly ? ' ' : ' *Tidak* '}Family Friendly
+Post oleh ${name} (${authorname || ''}) (${authorlink || ''})
+Diposting pada ${new Date(uploadDate).toLocaleDateString('id', dateConfig)}
+Size: ${contentSize || unknown}
+Durasi: ${clockString(+ new Date(duration))}
+Genre: ${genre || none}
+Kualitas: ${videoQuality ? videoQuality : unknown}
+
+${description}
+
+Keyword: ${keywords || none}
+`.trim()
+  zidni.sendFile(m.chat, url, 'media-fb', caption, m)
+  db.data.users[m.sender].limit -= 5		
+                    }                                                                                                                                                        
 			if (budy.match(`www.icocofun.com`)) {
 		m.reply(mess.wait)
 		if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
@@ -252,21 +289,23 @@ let anuu = await getBuffer (anu.result.SD)
 			   await zidni.sendMessage(m.chat, {video: qp, caption: waw.result.title},{ quoted: m })					 				  }
 	if (/^.*github.com/i.test(m.text)) {
 	if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-	m.reply(mess.wait)
+		m.reply(mess.wait)
 	let regex = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
     let [, user, repo] = link.match(regex) || []
     repo = repo.replace(/.git$/, '')
     let url = `https://api.github.com/repos/${user}/${repo}/zipball`
     let filename = (await fetch(url, {method: 'HEAD'})).headers.get('content-disposition').match(/attachment; filename=(.*)/)[1]
     // 'attachment; filenameq=ZidniGanz.zip'
-  zidni.sendMessage(from, { document: { url: url }, fileName: filename, mimetype: 'application/zip' }, { quoted: m })}
+  zidni.sendMessage(from, { document: { url: url }, fileName: filename, mimetype: 'application/zip' }, { quoted: m })
+  	db.data.users[m.sender].limit -= 5
+}
 			  if (/^.*instagram.com\/(p|reel|tv)/i.test(m.text)) {
 			 m.reply(mess.wait)
 			 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-  let anu = await fetchJson(`http://zekais-api.herokuapp.com/igdl2?url=${link}&apikey=zekais`)
-     zidni.sendFile(m.chat, anu.result[0].url, 'ig.' + anu.result[0].type, `Instagram • ${anu.result[0].type}`, m) }
+	  let anu = await fetchJson(`http://zekais-api.herokuapp.com/igdl2?url=${link}&apikey=zekais`)
+     zidni.sendFile(m.chat, anu.result[0].url, 'ig.' + anu.result[0].type, `Instagram • ${anu.result[0].type}`, m)
+     	db.data.users[m.sender].limit -= 5
+ }
        
 	    let mentionUser = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])]
 	    for (let jid of mentionUser) {
@@ -317,7 +356,7 @@ Selama ${clockString(new Date - user.afkTime)}
         db.data.users[m.sender].limit += ganu
         global.db.data.users[m.sender].potion += y
         db.data.users[m.sender].balance += gan
-        reply(`Selamat Kamu Mendapatkan ${ganu} Limt Dan Balance ${gan} Dan Potion ${y}`)
+        reply(`Selamat Kamu Mendapatkan ${ganu} Limt Dan Balance ${gan}`)
         } else zidni.sendBut(m.chat, `Kamu sudah mengklaim klaim harian hari ini\ntunggu selama ${timer} lagi`, `${pushname}`, 'ok', 'ok', m)
   db.data.users[m.sender].lastclaim = new Date * 1}
   break
@@ -396,6 +435,8 @@ _*メ Other*_
 *•* play
 *•* ytmp3
 *•* ttaudio
+*•* bitly
+*•* cutly
 *•* claim
 *•* buy
 *•* afk
@@ -463,12 +504,12 @@ case 'owner': case 'creator': {
 				break
 case 'waifu':{			
 					 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-					m.reply(mess.wait)
+			m.reply(mess.wait)
 						    let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
                 let buttonMessage = {image: {url: `https://yx-api.herokuapp.com/api/sfw/${command}`},caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
                 zidni.sendMessage(from, buttonMessage, { quoted: m})		  
-                   }
+               	db.data.users[m.sender].limit -= 5			
+                       }
                    		break		
                    		case 'zero':{
                    		let yo = await getBuffer(`https://api.akuari.my.id/search/konachan?query=${q}`)
@@ -487,7 +528,9 @@ break
         let yo = await fetchJson(`https://api-kaysa.herokuapp.com/api/jjanime?apikey=UjgqsMTs`)        
           let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
                 let buttonMessage = {video:{url: yo.video},caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
-                zidni.sendMessage(from, buttonMessage, { quoted: m})}  
+                zidni.sendMessage(from, buttonMessage, { quoted: m})
+                	db.data.users[m.sender].limit -= 5
+			}
             break
            case 'storyff':{
         m.reply(wet)
@@ -505,8 +548,7 @@ case 'storyml':{
             break
         case'wallpaper':case'wallq':case'wallpaperq':{
          if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-        if(!args[0]) return m.reply('Masukan Parameter Query')
+		        if(!args[0]) return m.reply('Masukan Parameter Query')
         m.reply( wet)
           if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 1
@@ -530,10 +572,11 @@ case 'storyml':{
   if (!json.wallpapers) throw json
   let img = json.wallpapers[Math.floor(Math.random() * json.wallpapers.length)];
   await zidni.sendFile(m.chat, img.url_image, text + `.${img.file_type}`, img.url_page, m);};
+  db.data.users[m.sender].limit -= 5
   break
  case'waifu2x': case'hd':{
   if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
+		
   m.reply(wet)
   const fs = require('fs')
 const deepai = require('deepai')
@@ -548,6 +591,7 @@ let img = mime.split('/')[1]
 		image: fs.readFileSync(`./${img}`)
 	})
 	await zidni.sendFile(m.chat, resp.output_url, 'hd.jpg', 'Nih, klo kurang hd reply foto ini', m).then(() => fs.unlinkSync(`./${img}`))
+db.data.users[m.sender].limit -= 5
 }
 break
 case'doge':case'spongebob':case'patrick':case 'gura':{
@@ -717,8 +761,7 @@ break
           break
              case'musik': case 'spotify':{
                if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-		m.reply(wet)
+			m.reply(wet)
  if (args.length < 1) return m.reply(`Contoh:\n${command} Lily Alan Walker`)
 let list_rows = [];
 let data1 = await fetchJson(`http://zekais-api.herokuapp.com/spotifysr?query=${q}&apikey=zekais`)
@@ -738,11 +781,13 @@ const sections = [
   buttonText: "Chose One",
   sections
 }
-     zidni.sendMessage(from, listMessage,{ quoted: m })}
+     zidni.sendMessage(from, listMessage,{ quoted: m })
+     db.data.users[m.sender].limit -= 5
+	}
 break			 
   case'joox':{
   if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
+		
 		m.reply(wet)
 const isUrl = str => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi.test(str)
     if (!text) return m.reply( `*Perintah ini untuk mencari lagu joox berdasarkan pencarian*\n\ncontoh:\n${usedPrefix + command} alone`)
@@ -754,7 +799,9 @@ const isUrl = str => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-
 *Durasi:* ${anu.duration}
 \n_Tunggu Upload Musiknya ya.._`.trim()
      zidni.sendMessage(m.chat, { image: {url:anu.thumb}, caption: pesan, quoted: m })
-      zidni.sendMessage(m.chat, { audio: { url: anu.result }, mimetype: 'audio/mpeg', fileName: anu.title+'.mp3' }, { quoted: m })}
+      zidni.sendMessage(m.chat, { audio: { url: anu.result }, mimetype: 'audio/mpeg', fileName: anu.title+'.mp3' }, { quoted: m })
+      db.data.users[m.sender].limit -= 5
+      }
           break
     
   case 'tinyurl':{
@@ -795,7 +842,7 @@ case 'cutly':
 case 'github':case 'repo':{
  if (!args[0]) return m.reply( 'Cari apa?')
  if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 1
+	
     let res = await fetch(global.api('https://api.github.com', '/search/repositories', {
         q: text
     }))
@@ -811,7 +858,9 @@ _Terakhir update pada *${formatDate(repo.updated_at)}*_
 ${repo.open_issues} Issue${repo.description ? `
 *Deskripsi:*\n${repo.description}` : ''}`.trim()
     }).join('\n\n')
-    m.reply(str)}
+    m.reply(str)
+    	db.data.users[m.sender].limit -= 3
+    	}
     break
         case 'tourl':{
          if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
@@ -855,7 +904,6 @@ break
             case 'ytnya':{
                    m.reply(mess.wait)
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
 				const { y2mateA, y2mateV } = require('./lib/y2mate4')
     let res = await y2mateV(q).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')})
@@ -864,8 +912,7 @@ break
                 }
                 break
               case 'ytsearch': case 'yts':{
-               if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
+               if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis		
  if (args.length < 1) return m.reply(`Contoh:\n${command} Lily Alan Walker`)
 let list_rows = [];
 let yts = require("yt-search")
@@ -885,24 +932,25 @@ const sections = [
   buttonText: "Chose One",
   sections
 }
-     zidni.sendMessage(from, listMessage,{ quoted: m })}
+     zidni.sendMessage(from, listMessage,{ quoted: m })
+     db.data.users[m.sender].limit -= 5
+     }
 break			 
 case 'ttaud':	case 'ttaudio': case 'tiktokaudio':{
 	 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-			     if (!args[0]) return m.reply('Masukan Parameter Url')
+	     if (!args[0]) return m.reply('Masukan Parameter Url')
 			    if (!args[0].includes('tiktok')) return m.reply(mess.error.Iv)
 			    m.reply(mess.wait)
 			    hx.ttdownloader(args[0]).then( data => {
 			      zidni.sendMessage(from, { audio: { url: data.nowm }, mimetype: 'audio/mp4' }, { quoted: m})			     
 				}).catch(() => m.reply(mess.error.api))
-		       }
+		     	db.data.users[m.sender].limit -= 5
+					         }
 		         break                     
              case 'play':{
                      if (!args[0])return m.reply('Masukan Paramater Query')
                      if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-                 const { y2mateV } = require('./lib/y2mate4') 
+	    const { y2mateV } = require('./lib/y2mate4') 
 			m.reply(wet)
 			 res = await yts(text)
 			  resu = await y2mateV(res.all[0].url).catch(e => {
@@ -911,7 +959,9 @@ case 'ttaud':	case 'ttaudio': case 'tiktokaudio':{
            let resi = await y2mateA(res.all[0].url)
             zidni.sendMessage(m.chat, {video: { url:resu[0].link },
                     caption: `Youtube Quality 480p\n`+resu[0].judul}, { quoted: m })
-        zidni.sendMessage(from, { audio: { url: resi[0].link },mimetype: 'audio/mp4', }, { quoted : m})}
+        zidni.sendMessage(from, { audio: { url: resi[0].link },mimetype: 'audio/mp4', }, { quoted : m})
+        	db.data.users[m.sender].limit -= 5
+             }
 			                break	       
              case'ytmp3':case 'ytmp33': {
              if (!args[0])return m.reply('Masukan Paramater Url')
