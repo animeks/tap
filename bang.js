@@ -907,7 +907,7 @@ case 'ttaud':	case 'ttaudio': case 'tiktokaudio':{
 			 res = await yts(text)
 			  resu = await y2mateV(res.all[0].url).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')  })
-            const { y2mateA } = require('./lib/y2mate')    
+            const { y2mateA } = require('./lib/y2mate4')    
            let resi = await y2mateA(res.all[0].url)
             zidni.sendMessage(m.chat, {video: { url:resu[0].link },
                     caption: `Youtube Quality 480p\n`+resu[0].judul}, { quoted: m })
@@ -919,7 +919,7 @@ case 'ttaud':	case 'ttaudio': case 'tiktokaudio':{
 		db.data.users[m.sender].limit -= 1
     		var mulaikah = args.join(' ')
 		m.reply(wet)
-                  const { y2mateA, y2mateV } = require('./lib/y2mate')
+                  const { y2mateA, y2mateV } = require('./lib/y2mate4')
          teks = args.join(' ')    
            let res = await y2mateA(teks).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')
