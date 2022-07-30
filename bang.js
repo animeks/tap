@@ -92,7 +92,7 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
             console.error(err)
         }
 	      if (isCmd) {
-				   anune =`300`
+				   anune =`100`
 susu = randomNomor(math(anune))
 db.data.users[m.sender].balance += susu}
         // Public & Self
@@ -236,47 +236,10 @@ let anuu = await getBuffer (anu.result.SD)
         	  if (/https?:\/\/(fb\.watch|(www\.|web\.|m\.)?facebook\.com)/i.test(m.text)){
 		 m.reply(mess.wait)
 		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		function clockString(ms) {
-  let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000)
-  let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
-  let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
-  return [h, m, s].map(v => v.toString().padStart(2, 0) ).join(':')
-}
-  let res = await fetch(global.api('xteam', '/dl/fbv2', {
-    url: link
-  }, 'APIKEY'))
-  if (res.status !== 200) {
-    res.text()
-    throw res.status
-  }
-  let json = await res.json()
-  if (!json.result) throw json
-  let { name, author, description, uploadDate, duration, url, isFamilyFriendly, genre, keywords, contentSize, videoQuality, commentCount } = json.result
-  let { name: authorname, url: authorlink } = author || {}
-  let dateConfig = {
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  }
-  let unknown = '_Unknown_'
-  let none = '_None_'
-  let caption = `
-Konten${isFamilyFriendly ? ' ' : ' *Tidak* '}Family Friendly
-Post oleh ${name} (${authorname || ''}) (${authorlink || ''})
-Diposting pada ${new Date(uploadDate).toLocaleDateString('id', dateConfig)}
-Size: ${contentSize || unknown}
-Durasi: ${clockString(+ new Date(duration))}
-Genre: ${genre || none}
-Kualitas: ${videoQuality ? videoQuality : unknown}
-
-${description}
-
-Keyword: ${keywords || none}
-`.trim()
-  zidni.sendFile(m.chat, url, 'media-fb', caption, m)
+		let ani = await fetchJson(`https://xteam.xyz/dl/fbv2?url=${link}&APIKEY=HIRO`)
+		let anu = ani.result.hd
+		let anok = ani.result.meta
+		   await zidni.sendMessage(m.chat, {video: {url: anu.url}, caption: anok.title},{ quoted: m })
   db.data.users[m.sender].limit -= 5		
                     }                                                                                                                                                        
 			if (budy.match(`www.icocofun.com`)) {
