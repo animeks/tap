@@ -140,15 +140,7 @@ let men = [num]
             console.log(err)
         }
     })
-    zidni.ev.on("messages.reaction", async (m) => {
-	await zidni.sendMessage(
-			m.reaction.key.remoteJid,
-			{
-				text: `*Terdeteksi Emoji Reaction:* ${m.reaction.text}`,
-				withTag: true,
-			});
-	});
-
+    
      zidni.parseMention = (text = '') => {
         return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net')
     }
