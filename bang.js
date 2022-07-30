@@ -1055,11 +1055,10 @@ break
     } catch (err) {
      const more = String.fromCharCode(8206)
         const readmore = more.repeat(4001)    
-    const command = body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase()
-    const sen = (teks) => {
+      const sen = (teks) => {
             zidni.sendMessage(`${owner}@s.whatsapp.net`, {text: teks}, {quoted: m})}
         m.reply(`*⚠️ Internal Server Eror️*`)
-        sen(`Command *${command}*\nEror\n\n\n`+util.format(err))
+        sen(`Command \nEror\n\n\n`+util.format(err))
     }
 }
 
