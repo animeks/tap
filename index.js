@@ -129,9 +129,11 @@ let men = [num]
  	const ftroli ={key: {fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "6289523258649-1604595598@g.us"}, "message": {orderMessage: {itemCount: metadata.participants.length,status: 200, thumbnail: ppmem2, surface: 200, message: `さ Welcome さ`, orderTitle: 'memek', sellerJid: '0@s.whatsapp.net'}}, contextInfo: {"forwardingScore":999,"isForwarded":true},sendEphemeral: true}
 		const ftrol ={key: {fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "6289523258649-1604595598@g.us"}, "message": {orderMessage: {itemCount: metadata.participants.length,status: 200, thumbnail: ppmem2, surface: 200, message: `さ Sayonara さ`, orderTitle: 'memek', sellerJid: '0@s.whatsapp.net'}}, contextInfo: {"forwardingScore":999,"isForwarded":true},sendEphemeral: true}	
 					    if (anu.action == 'add') {
-              		zidni.sendButtonText(anu.id, bot, `Halo @${num.split("@")[0]}\nSelamat Datang Di Grup ${metadata.subject}`, '', ftroli, {mentions: men})           
+              		zidni.sendButtonText(anu.id, bot, `Halo @${num.split("@")[0]}\nSelamat Datang Di Grup ${metadata.subject}`, '', ftroli, {mentions: men})       
+              		  zidni.sendMessage(`${num}@s.whatsapp.net`, {text: `Halo Kak Selamat Datang Di Grup ${metadata.subject}`})    
 								   } else if (anu.action == 'remove') {
             			zidni.sendButtonText(anu.id, bit, `@${num.split("@")[0]} Telah Keluar Dari Grup ${metadata.subject}`, '', ftrol, {mentions: men}) 
+            			  zidni.sendMessage(`${num}@s.whatsapp.net`, {text: `Yah Kak Kok Kamu Keluar Dari Grup Sih?`})
 							 }
             }
         } catch (err) {

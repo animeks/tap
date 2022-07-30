@@ -125,9 +125,7 @@ db.data.users[m.sender].balance += susu}
     	if (!m.key.fromMe && badword.includes(command)) {
 			  zidni.sendMessage(from, { audio: {url : `https://d.top4top.io/m_2248jzsk00.mp3`}, mimetype: 'audio/mp4', ptt: true}, {quoted: m})}
 	if (!m.key.fromMe && salam.includes(command)) {
-			  zidni.sendMessage(from, { audio: {url : `https://f.top4top.io/m_22521bnrt0.mp3`}, mimetype: 'audio/mp4', ptt: true}, {quoted: m})}		
-	if (!m.key.fromMe && humor.includes(command)) {
-			  zidni.sendMessage(from, { audio: {url : `https://a.uguu.se/vWsOLCBL.mp3`}, mimetype: 'audio/mp4', ptt: true}, {quoted: m})}	
+			  zidni.sendMessage(from, { audio: {url : `https://f.top4top.io/m_22521bnrt0.mp3`}, mimetype: 'audio/mp4', ptt: true}, {quoted: m})}				
 	 if (m.isGroup && !m.key.fromMe  && !isOwner && !isGroupAdmins && !isGroupOwner){
         	if (budy.match(`https://chat.whatsapp.com`)) {
         	zidni.sendMessage(m.chat, {text: `*Link Group Terdeteksi*\n\nKamu akan dikick dari group ini`}, {quoted:m})
@@ -174,6 +172,7 @@ var bod = m.body.split(" ");
 				        a.includes("mediafire.com") ||
 				        a.includes("www.icocofun.com") ||
 						a.includes("twitter.com") ||
+					    a.includes("pinterest.com") ||
 						a.includes("soundcloud.com"));
 					if (budy.match(`youtu.be`)){
 				m.reply(mess.wait)
@@ -185,6 +184,13 @@ var bod = m.body.split(" ");
             zidni.sendMessage(m.chat, {video: { url:res[0].link },
                     caption: `Youtube Quality 480p\n\n`+res[0].judul}, { quoted: m })
                 }
+                if(budy.match('pinterest.com')){
+                m.reply(wet)
+                let anu = await fetchJson(`https://api.akuari.my.id/downloader/pindl?link=${link}`)
+                zidni.sendMessage(m.chat, {image: { url: anu.result},
+                    caption: 'Pinterest Downloader'}, { quoted: m })
+                    }
+                
                 if(budy.match('youtube.com/shorts/')){
                 m.reply(wet)
                 let anu = await fetchJson(`https://api.akuari.my.id/downloader/yt1?link=${link}`)
@@ -343,11 +349,12 @@ Selama ${clockString(new Date - user.afkTime)}
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
-m.reply(`Hallo *${pushname}*
+reply(`Hallo *@${sender.split('@')[0]}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
 *•* Total User: ${Object.keys(global.db.data.users).length}
 *•* Runtime: ${runtime(process.uptime())}
+*•* Web: https://m.zidni.xyz
 ${read}
 _*メ Download*_
 *•* youtube
@@ -359,6 +366,7 @@ _*メ Download*_
 *•* cocofun
 *•* mediafire
 *•* github
+ _* Cukup Kirimkan Link Untuk Mengunduh media_
 
 _*メ Search*_
 *•* ytsearch
@@ -430,6 +438,11 @@ case 'bc1': case 'broadcast':{
                             for (let i of data) {
                              zidni.sendMessage(i.id, {video: repl, caption: `${args[1]}`})}}
                             break
+case 'shaun':{
+m.reply(wet)
+let rep = await zidni.downloadAndSaveMediaMessage(quoted)
+ let anu = await TelegraPh(rep)
+zidni.sendMessage(m.chat, {video: {url:`https://xteam.xyz/videomaker/shaunthesheep?url=${anu}&APIKEY=HIRO`}, caption: `Nih}`})}
 case 'owner': case 'creator': {
                 zidni.sendContact(m.chat, global.owner, m) }
             break
@@ -816,7 +829,7 @@ break
                    m.reply(mess.wait)
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 5
-				const { y2mateA, y2mateV } = require('./lib/y2mate')
+				const { y2mateA, y2mateV } = require('./lib/y2mate4')
     let res = await y2mateV(q).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')})
             zidni.sendMessage(m.chat, {video: { url:res[0].link },
