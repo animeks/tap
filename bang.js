@@ -173,6 +173,7 @@ var bod = m.body.split(" ");
 				        a.includes("www.icocofun.com") ||
 						a.includes("twitter.com") ||
 					    a.includes("pinterest.com") ||
+					    a.includes("pin.it") ||
 						a.includes("soundcloud.com"));
 					if (budy.match(`youtu.be`)){
 				m.reply(mess.wait)
@@ -190,7 +191,12 @@ var bod = m.body.split(" ");
                 zidni.sendMessage(m.chat, {image: { url: anu.result},
                     caption: 'Pinterest Downloader'}, { quoted: m })
                     }
-                
+                if(budy.match('pin.it')){
+                m.reply(wet)
+                let anu = await fetchJson(`https://api.akuari.my.id/downloader/pindl?link=${link}`)
+                zidni.sendMessage(m.chat, {image: { url: anu.result},
+                    caption: 'Pinterest Downloader'}, { quoted: m })
+                    }
                 if(budy.match('youtube.com/shorts/')){
                 m.reply(wet)
                 let anu = await fetchJson(`https://api.akuari.my.id/downloader/yt1?link=${link}`)
@@ -300,7 +306,7 @@ Selama ${clockString(new Date - user.afkTime)}
   let ss = await (await fetch(api('nrtm', '/api/ssweb', { delay: 1000, url, full }))).buffer()
   zidni.sendFile(m.chat, ss, 'screenshot.png', url, m, 0, { thumbnail: ss })}
       if (/limit/i.test(command)){
-   zidni.sendTextWithMentions(m.chat, `Limit @${sender.split('@')[0]} Tersisa ${global.db.data.users[m.sender].limit}\nAnd Balance ${db.data.users[sender].balance}`, m)}
+   zidni.sendTextWithMentions(m.chat, `Limit ${pushname} Tersisa ${global.db.data.users[m.sender].limit}\nAnd Balance ${db.data.users[sender].balance}`, m)}
 
         switch(command) {
        case'daily':case'klaim': case 'claim':{
@@ -349,7 +355,7 @@ Selama ${clockString(new Date - user.afkTime)}
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
-reply(`Hallo *@${sender.split('@')[0]}*
+reply(`Hallo *${pushname}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
 *•* Total User: ${Object.keys(global.db.data.users).length}
@@ -365,8 +371,8 @@ _*メ Download*_
 *•* tiktok
 *•* cocofun
 *•* mediafire
+*•* pinterest
 *•* github
- _* Cukup Kirimkan Link Untuk Mengunduh media_
 
 _*メ Search*_
 *•* ytsearch
@@ -375,6 +381,7 @@ _*メ Search*_
 *•* spotify
 *•* musik
 *•* repo
+*•* brainly
 
 _*メ Other*_
 *•* smeme
@@ -443,6 +450,16 @@ m.reply(wet)
 let rep = await zidni.downloadAndSaveMediaMessage(quoted)
  let anu = await TelegraPh(rep)
 zidni.sendMessage(m.chat, {video: {url:`https://xteam.xyz/videomaker/shaunthesheep?url=${anu}&APIKEY=HIRO`}, caption: `Nih}`})}
+break
+case'brainly':{
+    if (!text) return m.reply( `uhm.. teksnya mana?\n\ncontoh:\n${usedPrefix + command} kapan indonesia merdeka`)
+    let res = await fetch(`https://api.xteam.xyz/brainly?soal=${text}&APIKEY=cristian9407`)
+    if (!res.ok) throw eror
+    let json = await res.json()
+    if (!json.status) throw json
+    m.reply(json.jawaban)
+}
+break
 case 'owner': case 'creator': {
                 zidni.sendContact(m.chat, global.owner, m) }
             break
