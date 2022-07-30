@@ -902,7 +902,7 @@ case 'ttaud':	case 'ttaudio': case 'tiktokaudio':{
                      if (!args[0])return m.reply('Masukan Paramater Query')
                      if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 5
-                 const { y2mateV } = require('./lib/y2mate') 
+                 const { y2mateV } = require('./lib/y2mate4') 
 			m.reply(wet)
 			 res = await yts(text)
 			  resu = await y2mateV(res.all[0].url).catch(e => {
