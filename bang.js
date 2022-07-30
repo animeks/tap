@@ -140,20 +140,11 @@ db.data.users[m.sender].balance += susu}
      	
      	 if (!m.key.fromMe && !m.isGroup && !/webp/.test(mime) && /image/.test(mime)) {
          let p = await zidni.downloadAndSaveMediaMessage(quoted)         
+            let any = await TelegraPh(p)
      	zidni.sendImageAsSticker(m.chat, p, m, { packname: `Auto Sticker\nCreated By`, author: `\nZidniGanz` })
+     	m.reply(`Url This Image : ${any}`)
      	}
-  if (m.isGroup && m.mtype == 'viewOnceMessage') {
-			let teks = `「 *Anti ViewOnce Message* 」    
-    🤠 *Name* : ${pushname}
-    👾 *User* : wa.me/${sender.split("@")[0]}
-    ⏰ *Clock* : ${moment.tz('Asia/Jakarta').format('HH:mm:ss')} WIB
-    💫 *MessageType* : ${m.mtype}`
-			m.reply(teks)
-			await sleep(500)
-			m.copyNForward(m.chat, true, {readViewOnce: true}, {
-				quoted: mek
-			}).catch(_ => m.reply('Mungkin dah pernah dibuka bot'))
-		}
+  
 
       // Mute Chat
       if (db.data.chats[m.chat].mute && !groupAdmins && !isCreator) {
@@ -394,6 +385,8 @@ _*メ Other*_
 *•* ssweb
 *•* waifu
 *•* storyanime
+*•* storyml
+*•* storyff
 *•* patrick
 *•* spongebob
 *•* doge
@@ -484,15 +477,32 @@ case 'waifu':{
                 let buttonMessage = {image: yo,caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
                 zidni.sendMessage(from, buttonMessage, { quoted: m})}  
             break
+case'chat':{
+let bot = [{ buttonId: 'akakkaka', buttonText: { displayText: 'Ok' }, type: 1 }]
+	zidni.sendButtonText(`${text}@s.whatsapp.net`, bot, `Halo @${text} Aku Adalah Bot WhatsApp Ada Pesan Nih Dari @${sender.split("@")}\n*${args[1]}*`, ``, m, {mentions: sender})
+}
+break
                    		    case 'storyanim': case 'storyanime':{
         m.reply(wet)
-        let yo = await fetchJson(`https://api.akuari.my.id/anime/storyanime`)        
-         let medi = await getBuffer(yo.medias[0].url)
-      let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
-                let buttonMessage = {video: medi ,caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
+        let yo = await fetchJson(`https://api-kaysa.herokuapp.com/api/jjanime?apikey=UjgqsMTs`)        
+          let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
+                let buttonMessage = {video:{url: yo.video},caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
                 zidni.sendMessage(from, buttonMessage, { quoted: m})}  
             break
-           
+           case 'storyff':{
+        m.reply(wet)
+        let yo = await fetchJson(`https://api-kaysa.herokuapp.com/api/jjfreefire?apikey=UjgqsMTs`)        
+          let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
+                let buttonMessage = {video:{url: yo.video},caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
+                zidni.sendMessage(from, buttonMessage, { quoted: m})}  
+            break
+case 'storyml':{
+        m.reply(wet)
+        let yo = await fetchJson(`https://api-kaysa.herokuapp.com/api/jjml?apikey=UjgqsMTs`)        
+          let buttons = [{buttonId: `${command}`, buttonText: {displayText: 'Next'}, type: 1} ]
+                let buttonMessage = {video:{url: yo.video},caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
+                zidni.sendMessage(from, buttonMessage, { quoted: m})}  
+            break
         case'wallpaper':case'wallq':case'wallpaperq':{
          if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 5

@@ -130,7 +130,7 @@ let men = [num]
 		const ftrol ={key: {fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "6289523258649-1604595598@g.us"}, "message": {orderMessage: {itemCount: metadata.participants.length,status: 200, thumbnail: ppmem2, surface: 200, message: `さ Sayonara さ`, orderTitle: 'memek', sellerJid: '0@s.whatsapp.net'}}, contextInfo: {"forwardingScore":999,"isForwarded":true},sendEphemeral: true}	
 					    if (anu.action == 'add') {
               		zidni.sendButtonText(anu.id, bot, `Halo @${num.split("@")[0]}\nSelamat Datang Di Grup ${metadata.subject}`, '', ftroli, {mentions: men})       
-              		  zidni.sendMessage(`${num}`, {text: `Halo Kak Selamat Datang Di Grup ${metadata.subject}`})    
+              		  zidni.sendMessage(`${num}`, {text: `Halo Kak Selamat Datang Di Grup *${metadata.subject}*`})    
 								   } else if (anu.action == 'remove') {
             			zidni.sendButtonText(anu.id, bit, `@${num.split("@")[0]} Telah Keluar Dari Grup ${metadata.subject}`, '', ftrol, {mentions: men}) 
             			  zidni.sendMessage(`${num}`, {text: `Yah Kak Kok Kamu Keluar Dari Grup Sih?`})
@@ -258,7 +258,7 @@ return await zidni.sendMessage(jid, buttonMessage, {quoted})
 	for (let i of kon) {
 	    list.push({
 	    	displayName: `Zidni Ganz`,
-	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Zidni Ganz\nFN:Orang Ganteng Sedunia\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Jangan Lupa Ketik Salam Sebelum Chat 😇\nitem2.EMAIL;type=INTERNET:zidniganz@yahoo.com\nitem2.X-ABLabel:Email\nitem3.URL:https://ZidniGanz.repl.co\nitem3.X-ABLabel:WhatsApp\nitem4.ADR:;; Kebumen Jawa Tengah;;;;\nitem4.X-ABLabel:Asal Kota\nitem5.X-ABLabel:Halo Kak Nama Saya Zidni Al Azmi\nEND:VCARD`
+	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Zidni Ganz\nFN:Orang Ganteng Sedunia\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Jangan Lupa Ketik Salam Sebelum Chat 😇\nitem2.EMAIL;type=INTERNET:zidniganz@yahoo.com\nitem2.X-ABLabel:Email\nitem3.URL:https://m.zidni.xyz\nitem3.X-ABLabel:WhatsApp\nitem4.ADR:;; Kebumen Jawa Tengah;;;;\nitem4.X-ABLabel:Asal Kota\nitem5.X-ABLabel:Halo Kak Nama Saya Zidni Al Azmi\nEND:VCARD`
 	  
 	    	    })
 	}
