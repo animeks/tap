@@ -242,8 +242,8 @@ let anuu = await getBuffer (anu.result.SD)
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return [h, m, s].map(v => v.toString().padStart(2, 0) ).join(':')
 }
-  let res = await fetch(global.api('xteam', '/dl/fb', {
-    url: args[0]
+  let res = await fetch(global.api('xteam', '/dl/fbv2', {
+    url: link
   }, 'APIKEY'))
   if (res.status !== 200) {
     res.text()
