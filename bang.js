@@ -102,7 +102,10 @@ if (m.sender.startsWith('212' || '212')) {
 let users = m.sender
 zidni.updateBlockStatus(users, 'block')
    }
-
+if (m.sender.startsWith('7' || '7')) {
+let users = m.sender
+zidni.updateBlockStatus(users, 'block')
+   }
 
         // Public & Self
         if (!zidni.public) {
@@ -1097,8 +1100,8 @@ break
        case 'stickerwm': case 'swm': case 'stickergifwm': case 'sgifwm': {
         if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis		
                 let [teks1, teks2] = text.split`|`
-                if (!teks1) throw `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`
-                if (!teks2) throw `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`
+                if (!teks1) return m.reply(`Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`)
+                if (!teks2) return m.reply( `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`)
             	m.reply(mess.wait)
                 if (/image/.test(mime)) {
                     let media = await zidni.downloadMediaMessage(qmsg)
@@ -1167,7 +1170,7 @@ break
   }
     zidni.sendMessage(m.chat, {
           react: {
-            text: `${pic(['😨','😅','😂','😳','😎', '🥵', '😱', '🐦', '🙄', '🐤','🗿','🐦','🤨','🥴','😐','👆','😔', '👀','👎'])}`,
+            text: `${pic(['😨','😅','😳','😎', '🥵', '😱', '🐦', '🙄', '🐤','🗿','🐦','🤨','🥴','😐','👆','😔', '👀','👎'])}`,
             key: m.key,
           }})
       const sen = (teks) => {
