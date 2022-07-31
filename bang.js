@@ -110,7 +110,7 @@ let msg = await zidni.serializeM(await store.loadMessage(key.remoteJid, key.id))
 let teks = `   「 Anti Delete Message 」
 ▸ User : @${sender.split("@")[0]}
 ▸ Date : ${moment.tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
-▸ Type : ${mtype}
+▸ Type : ${msg.mtype}
             `
 zidni.sendText(m.chat, teks, msg, { mentions: [msg.sender] })
 await zidni.relayMessage(m.chat, msg.message, { messageId: msg.id })
@@ -384,7 +384,8 @@ Selama ${clockString(new Date - user.afkTime)}
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
-reply(`Hallo *${pushname}*
+        const repl = async (jid, text, quoted, options = {}) => zidni.sendMessage(chatId ? chatId : m.chat, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted:m }) 
+repl(`Hallo *@${sender.split("@")}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
 *•* Total User: ${Object.keys(global.db.data.users).length}
