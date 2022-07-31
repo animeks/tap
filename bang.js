@@ -333,6 +333,36 @@ Selama ${clockString(new Date - user.afkTime)}
   let ss = await (await fetch('https://hadi-api.herokuapp.com/api/ssweb?url=' + encodeURIComponent(url) + '&device=phone&full=on')).buffer()
   zidni.sendFile(m.chat, ss, 'screenshot.png', url, m)}
   break
+case'char':case'karakter': {
+  if (!text) return m.reply( `Masukkan query!`)
+  let res = await fetch(global.API('https://api.jikan.moe', '/v3/search/character', { q: text }))
+  if (!res.ok) throw await res.text()
+  let json = await res.json()
+  let { name, alternative_names, url, image_url, type } = json.results[0]
+let charaingfo = `💬 *Name:* ${name}
+💭 *Nickname:* ${alternative_names}
+🔗 *Link*: ${url}
+👤 *Character Type*: ${type}`
+  const ftroli = {
+    key : {
+    remoteJid: '6283136505591-1614953337@g.us',
+    participant : '0@s.whatsapp.net'
+    },
+    message: {
+    orderMessage: {
+    itemCount : 2022,
+    status: 1,
+    surface : 1,
+    message: `Character ${name}`, 
+    orderTitle: `${pushname}`,
+    thumbnail: 'https://telegra.ph/file/5ecbec3e82e247671a18e.jpg', 
+    sellerJid: '0@s.whatsapp.net' 
+    }
+    }
+    }
+  zidni.sendFile(m.chat, image_url, '', charaingfo, ftroli)
+}
+break
        case'daily':case'klaim': case 'claim':{
               function kol(ms) {
   let h = Math.floor(ms / 3600000)
@@ -577,31 +607,11 @@ case 'storyml':{
             break
         case'wallpaper':case'wallq':case'wallpaperq':{
          if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		        if(!args[0]) return m.reply('Masukan Parameter Query')
-        m.reply( wet)
-          if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 1
-  let res 
-  if (text) res = await fetch(
-    global.api("https://wall.alphacoders.com/api2.0", "/get.php", {
-      auth: "3e7756c85df54b78f934a284c11abe4e",
-      method: "search",
-      term: text,
-    })
-  )
-    else res = await fetch(
-    global.api("https://wall.alphacoders.com/api2.0", "/get.php", {
-      auth: "3e7756c85df54b78f934a284c11abe4e",
-      method: "latest",
-    })
-  )
-
-  if (!res.ok) throw await res.text()
-  let json = await res.json()
-  if (!json.wallpapers) throw json
-  let img = json.wallpapers[Math.floor(Math.random() * json.wallpapers.length)];
-  await zidni.sendFile(m.chat, img.url_image, text + `.${img.file_type}`, img.url_page, m);};
+		      if (!text) return zidni.reply(m.chat, 'Silahkan masukan query', m)
+let tetete = `https://api.zacros.my.id/search/alphacoders?query=${text}`
+zidni.sendButtonImg(m.chat, tetete, `Hasil Dari ${text}`, '', 'Next', `wallq ${q}`, m) 
   db.data.users[m.sender].limit -= 5
+  }
   break
  case'waifu2x': case'hd':{
   if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
@@ -1099,16 +1109,16 @@ break
 									
        case 'stickerwm': case 'swm': case 'stickergifwm': case 'sgifwm': {
         if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis		
-                if (!teks1) return m.reply(`Kirim/reply image/video dengan caption ${prefix + command} teks1 teks2`)
+                if (!q) return m.reply(`Kirim/reply image/video dengan caption ${prefix + command} teks1 teks2`)
               m.reply(mess.wait)
                 if (/image/.test(mime)) {
                     let media = await zidni.downloadMediaMessage(quoted)
-                    let encmedia = await zidni.sendImageAsSticker(m.chat, media, m, { packname: teks1, author: '' })
+                    let encmedia = await zidni.sendImageAsSticker(m.chat, media, m, { packname: q, author: '' })
                     await fs.unlinkSync(encmedia)
                 } else if (/video/.test(mime)) {
                     if ((quoted.msg || quoted).seconds > 11) return m.reply('Maksimal 10 detik!')
                     let media = await zidni.downloadMediaMessage(quoted)
-                    let encmedia = await zidni.sendVideoAsSticker(m.chat, media, m, { packname: teks1, author: '' })
+                    let encmedia = await zidni.sendVideoAsSticker(m.chat, media, m, { packname: q, author: '' })
                     await fs.unlinkSync(encmedia)
                 } else {
                     return m.reply( `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik`)
