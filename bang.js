@@ -109,7 +109,7 @@ let key = m.message.protocolMessage.key
 let msg = await zidni.serializeM(await store.loadMessage(key.remoteJid, key.id))
 let teks = `   「 Anti Delete Message 」
 ▸ User : @${sender.split("@")[0]}
-▸ Date : ${moment(messageTimestamp * 1000).tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
+▸ Date : ${moment.tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
 ▸ Type : ${mtype}
             `
 zidni.sendText(m.chat, teks, msg, { mentions: [msg.sender] })
