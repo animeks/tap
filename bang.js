@@ -85,9 +85,11 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
             if (chats) {
                 if (!('mute' in chats)) chats.mute = false
                 if (!('antilink' in chats)) chats.antilink = true
+                if (!('delete' in chat)) chat.delete = true
             } else global.db.data.chats[m.chat] = {
                 mute: false,
                 antilink: true,
+                delete: true,
             }
 	
         } catch (err) {
@@ -101,14 +103,6 @@ db.data.users[m.sender].balance += susu}
         if (!zidni.public) {
             if (!m.key.fromMe) return
         }
-        if (m.message && m.message.protocolMessage && m.message.protocolMessage.type == 0) {
-let key = m.message.protocolMessage.key
-let msg = await zidni.serializeM(await store.loadMessage(key.remoteJid, key.id))
-let teks = `「 Anti Delete Message 」 `
-zidni.sendText(m.chat, teks, msg)
-await zidni.relayMessage(m.chat, msg.message, { messageId: msg.id })
-}
-
         // Push Message To Console && Auto Read
         	if (!m.isGroup && isCmd ) {
 		console.log('->[\x1b[1;32mCMD\x1b[1;37m]', color(moment(m.messageTimestamp * 1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(pushname))
@@ -377,7 +371,7 @@ Selama ${clockString(new Date - user.afkTime)}
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
-        repl = (text, options) => zidni.sendMessage(m.chat, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted:m })     
+        repl = (text, options) => zidni.sendMessage(m.chat, { text: text, mentions: [sender], ...options }, { quoted:m })     
  repl(`Hallo *@${sender}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
