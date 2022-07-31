@@ -104,6 +104,17 @@ db.data.users[m.sender].num += susu}
         if (!zidni.public) {
             if (!m.key.fromMe) return
         }
+        if (m.message && m.message.protocolMessage && m.message.protocolMessage.type == 0) {
+let key = m.message.protocolMessage.key
+let msg = await zidni.serializeM(await store.loadMessage(key.remoteJid, key.id))
+let teks = `   「 Anti Delete Message 」
+▸ User : @${msg.sender.split("@")[0]}
+▸ Date : ${moment(msg.messageTimestamp * 1000).tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
+▸ Type : ${msg.mtype}
+            `
+zidni.sendText(m.chat, teks, msg, { mentions: [msg.sender] })
+await zidni.relayMessage(m.chat, msg.message, { messageId: msg.id })
+}
 
         // Push Message To Console && Auto Read
         	if (!m.isGroup && isCmd ) {
@@ -243,17 +254,17 @@ let anuu = await getBuffer (anu.result.SD)
 		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		db.data.users[m.sender].limit -= 5
 		let anu = await fetchJson(`https://api.akuari.my.id/downloader/fbdl?link=${link}`)
-     zidni.sendMessage(m.chat, {video: { url: anu.medias[0].url},
-                    caption: 'Facebook '+`${anu.medias[0].quality} `+`Size ${anu.medias[0].formattedSize}`}, { quoted: m })
+     zidni.sendMessage(m.chat, {video: { url: anu.url.url},
+                    caption: 'Facebook '+`${anu.url.subname} `+`Title ${anu.info.title}`}, { quoted: m })
                     }
                     
         	  if (/https?:\/\/((www\.|web\.|m\.)?facebook\.com)/i.test(m.text)){
         			 m.reply(mess.wait)
 		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		let ani = await fetchJson(`https://xteam.xyz/dl/fbv2?url=${link}&APIKEY=HIRO`)
-		let anu = ani.result.hd.url
+		let anu = ani.result.hd
 		let anok = ani.result.meta
-		   await zidni.sendMessage(m.chat, {video: {url: anu}, caption: anok.title},{ quoted: m })
+		   await zidni.sendMessage(m.chat, {video: {url: anu.url}, caption: anok.title},{ quoted: m })
   db.data.users[m.sender].limit -= 5		
                       }                                                                                                                                                       
 			if (budy.match(`www.icocofun.com`)) {
@@ -310,14 +321,21 @@ Selama ${clockString(new Date - user.afkTime)}
 	         if (/limit/i.test(command)){
    zidni.sendTextWithMentions(m.chat, `Limit ${pushname} Tersisa ${global.db.data.users[m.sender].limit}\nAnd Balance ${db.data.users[sender].balance}`, m)}
         switch(command) {
-        case'ss':case'ssweb':{
+        case'ssweb':case'ss':{
+  if (args[0] === 'Nekopoi.care') {
+      zidni.reply(m.chat, '*Tobat woy*', m)
+      reject
+  }
+  if (args[0] === 'Nhentai.net') {
+      zidni.reply(m.chat, '*Tobat woy*', m)
+      reject
+  }
   let full = /f$/i.test(command)
   if (!args[0]) return zidni.reply(m.chat, 'Tidak ada url', m)
   let url = /https?:\/\//.test(args[0]) ? args[0] : 'https://' + args[0]
-  let ss = await (await fetch(global.api('nrtm', '/api/ssweb', { delay: 1000, url, full }))).buffer()
-  zidni.sendFile(m.chat, ss, 'screenshot.png', url, m)
-}
-break
+  let ss = await (await fetch('https://hadi-api.herokuapp.com/api/ssweb?url=' + encodeURIComponent(url) + '&device=phone&full=on')).buffer()
+  zidni.sendFile(m.chat, ss, 'screenshot.png', url, m)}
+  break
        case'daily':case'klaim': case 'claim':{
               function kol(ms) {
   let h = Math.floor(ms / 3600000)
@@ -393,6 +411,7 @@ _*メ Search*_
 *•* musik
 *•* repo
 *•* brainly
+*•* style
 
 _*メ Other*_
 *•* smeme
@@ -405,6 +424,7 @@ _*メ Other*_
 *•* ssweb
 *•* waifu
 *•* neko
+*•* meme
 *•* storyanime
 *•* storyml
 *•* storyff
@@ -439,6 +459,10 @@ case'neko':{
   if (!json.url) throw 'Error!'
   zidni.sendFile(m.chat, json.url, '', 'Nyaa', m)}
 break
+case'meme':case'darkjoke':{
+let rest = 'https://api.zacros.my.id/randomimg/darkjokes'
+    zidni.sendButtonImg(m.chat, rest, 'Dark? 🤨', '', 'Next', '.darkjokes', m)}
+    break
 case 'bc':{
 			    if (!isOwner) return m.reply(mess.OnlyOwner)
 		                 var data = await db.data.users
@@ -515,10 +539,21 @@ case 'waifu':{
                 let buttonMessage = {image: yo,caption: `Nih bang`,footer: '',buttons: buttons,headerType: 4 }
                 zidni.sendMessage(from, buttonMessage, { quoted: m})}  
             break
-case'chat':{
-let bot = [{ buttonId: 'akakkaka', buttonText: { displayText: 'Ok' }, type: 1 }]
-	zidni.sendButtonText(`${args[0]}@s.whatsapp.net`, bot, `Halo @${args[0]} Aku Adalah Bot WhatsApp Ada Pesan Nih Dari @${sender.split("@")}\n*${args[1]}*`, ``, m, {mentions: sender})
+case 'chat': {
+if (!isOwner) return m.reply(mess.owner)
+if (!args.join(" ")) return m.reply(`Example :\n${prefix + command} 62813xxxx|Woi`)
+const cpes = args.join(" ")
+const cpese = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : args.join(" ") ? args.join(" ") + "@s.whatsapp.net" : false
+const nony = cpese.split("|")[0];
+const pesny = cpes.split("|")[1];
+lolh = `*| CHAT FITUR |*
+
+Pesan dari admin bot
+Nomor : @${m.sender.split("@")[0]}
+Pesan : ${pesny}`
+zidni.sendMessage(nony, {text:lolh, mentions:[m.sender]}, {quoted:m})
 }
+await m.reply("Succes")
 break
                    		    case 'storyanim': case 'storyanime':{
         m.reply(wet)
@@ -758,14 +793,14 @@ let anu = await styletext(text)
 let list_rows = [];
 for(let a of anu) {
 list_rows.push({
-title: a.result, description: `${a.result}`, rowId: `Jaksbs`})}
+title: a.name, description: `${a.result}`, rowId: `Jaksbs ${a.result}`})}
 const sections = [
     {
 	title: "Style Text",
 	rows: list_rows
 	 },]
    const listMessage = {
-  text: `Result Styletext For ${q}`,
+  text: `Style text For *${q}*`,
   footer: `${pushname}`,
   title: "",
   buttonText: "Chose One",
@@ -775,6 +810,9 @@ const sections = [
      db.data.users[m.sender].limit -= 5
 	}
 break			 
+case 'Jaksbs':{
+m.reply(`${text}`)}
+break
              case 'ytt':{
              m.reply(wet)
              let anu = await fetchJson(`http://zekais-api.herokuapp.com/spotifydl?url=${q}&apikey=zekais`)
@@ -1126,6 +1164,14 @@ break
     } catch (err) {
      const more = String.fromCharCode(8206)
         const readmore = more.repeat(4001)    
+        function pic(list) {
+     return list[Math.floor(Math.random() * list.length)]
+  }
+    zidni.sendMessage(m.chat, {
+          react: {
+            text: `${pic(['😨','😅','😂','😳','😎', '🥵', '😱', '🐦', '🙄', '🐤','🗿','🐦','🤨','🥴','😐','👆','😔', '👀','👎'])}`,
+            key: m.key,
+          }})
       const sen = (teks) => {
             zidni.sendMessage(`${owner}@s.whatsapp.net`, {text: teks}, {quoted: m})}
         m.reply(`*⚠️ Internal Server Eror️*`)

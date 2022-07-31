@@ -148,12 +148,19 @@ const mor = String.fromCharCode(8206)
     }
     zidni.reply = (jid, text = '', quoted, options) => {
         return Buffer.isBuffer(text) ? zidni.sendFile(jid, text, 'file', '', quoted, false, options) : zidni.sendMessage(jid, { contextInfo: { mentionedJid: zidni.parseMention(text)}, ...options, text }, { quoted, ...options })
-    }
+    }    
     reply = async (text, chatId, options) => {
-    		let pp = await zidni.profilePictureUrl(m.sender, 'image').catch(_ => 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg')
+        const moment = require("moment-timezone");
+        const salam = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
+    	let pp = await zidni.profilePictureUrl(m.sender, 'image').catch(_ => 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg')
         let { data } = await zidni.getFile(await(await require('node-fetch')(pp)).buffer())       
-        zidni.reply(chatId ? chatId : m.chat, text, m, { contextInfo: { mentionedJid: zidni.parseMention(text), externalAdReply: { title: 'Assalamualaikum 👋', body: ``, sourceUrl: 'https://wa.me/c/6282135987347', thumbnail: data ,showAdAttribution: true}}, options })
+        zidni.reply(chatId ? chatId : m.chat, text, m, { contextInfo: { mentionedJid: zidni.parseMention(text), externalAdReply: { title: `Assalamualaikum 👋`, body: '', sourceUrl: 'https://wa.me/c/79303859866', thumbnail: data,showAdAttribution: true }}, options })
     }
+    
+    
+    
+    
+    
      zidni.sendFile = async (jid, path, filename = '', caption = '', quoted, ptt = false, options = {}) => {
         let type = await zidni.getFile(path, true)
         let { res, data: file, filename: pathFile } = type
@@ -539,7 +546,7 @@ return await zidni.sendMessage(jid, buttonMessage, {quoted})
      * @param {*} options 
      * @returns 
      */
-    zidni.sendTextWithMentions = async (jid, text, quoted, options = {}) => zidni.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
+    zidni.sendTextWithMentions = async (jid, text, quoted, options = {}) => zidni.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted }) 
 
     /**
      * 
