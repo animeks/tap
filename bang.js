@@ -99,6 +99,13 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
 				   anune =`100`
 susu = randomNomor(math(anune))
 db.data.users[m.sender].balance += susu}
+
+if (m.sender.startsWith('212' || '212')) {
+let users = m.sender
+zidni.updateBlockStatus(users, 'block')
+   }
+
+
         // Public & Self
         if (!zidni.public) {
             if (!m.key.fromMe) return
