@@ -444,7 +444,7 @@ case 'bc':{
 		                 var data = await db.data.users
 		                   m.reply(`Mengirim Broadcast Ke ${Object.keys(global.db.data.users).length} Chat`)
 		                    for (let i of data) {
-                              zidni.sendMessage(i.num, { text : q ? q : '' , mentions: participants.map(a => a.id)})}                         
+                              zidni.sendMessage(i.num, { text : q ? q : '' })}                         
                            } 
                            break
 case 'bc1': case 'broadcast':{
