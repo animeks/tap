@@ -142,28 +142,6 @@ const mor = String.fromCharCode(8206)
             console.log(err)
         }
     })
-    
-    
-    
-        zidni.ev.on('message.delete', async delete({ remoteJid, fromMe, id, participant }) => {
-         if (fromMe) return
-        let chats = Object.entries(await this.chats).find(([user, data]) => data.messages && data.messages[id])
-        if (!chats) return
-        let msg = JSON.parse(JSON.stringify(chats[1].messages[id]))
-        let chat = global.db.data.chats[msg.key.remoteJid] || {}
-        if (chat.delete) return
-        await zidni.sendBut(msg.key.remoteJid, `
-Terdeteksi @${participant.split`@`[0]} telah menghapus pesan
-Untuk mematikan fitur ini, ketik
-*.enable delete*
-`.trim(), `Delete`, 'Matikan Fitur ini', '.enable delete', msg, {
-            mentions: [participant]
-        })
-        await this.delay(1000)
-        zidni.copyNForward(msg.key.remoteJid, msg).catch(e => console.log(e, msg))
-    })
-
-
 
      zidni.parseMention = (text = '') => {
         return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net')
