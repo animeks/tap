@@ -371,8 +371,7 @@ Selama ${clockString(new Date - user.afkTime)}
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
-        repl = (text, options) => zidni.sendMessage(m.chat, { text: text, mentions: [sender], ...options }, { quoted:m })     
- repl(`Hallo *@${sender.split("@")}*
+        zidni.sendTextWithMentions(m.chat, `Hallo *@${sender.split("@")}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
 *•* Total User: ${Object.keys(global.db.data.users).length}
@@ -436,7 +435,7 @@ _*メ Other*_
 *•* demote
 *•* hidetag
 *•* autostiker
-*•* mute\n\n*𝑆𝑖𝑚𝑝𝑙𝑒 𝐵𝑜𝑡 𝑊ℎ𝑎𝑡𝑠𝐴𝑝𝑝 ッ*`)
+*•* mute\n\n*𝑆𝑖𝑚𝑝𝑙𝑒 𝐵𝑜𝑡 𝑊ℎ𝑎𝑡𝑠𝐴𝑝𝑝 ッ*`,m)
  
              }
 break
