@@ -371,7 +371,7 @@ Selama ${clockString(new Date - user.afkTime)}
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
-        zidni.sendTextWithMentions(m.chat, `Hallo *@${sender.split("@")}*
+        zidni.sendTextWithMentions(m.chat, `Hallo *${pushname}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
 *•* Total User: ${Object.keys(global.db.data.users).length}
