@@ -161,8 +161,7 @@ Untuk mematikan fitur ini, ketik
         })
         await this.delay(1000)
         zidni.copyNForward(msg.key.remoteJid, msg).catch(e => console.log(e, msg))
-    }
-})
+    })
 
 
 
