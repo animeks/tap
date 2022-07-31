@@ -221,19 +221,10 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut
 	db.data.users[m.sender].limit -= 10
 }
 if (/^.*twitter.com/i.test(m.text)){
-  let res = await fetch(global.api('xteam', '/dl/twitter', { url: link }, 'APIKEY'))
-  if (res.status != 200) throw await res.text()
-  let json = await res.json()
-  if (!json.status) throw json
-  let { name, username, caption, quality, format, size, video_url } = json.result
-  zidni.sendFile(m.chat, video_url, 'file.mp4', `
-Name: ${name}
-Username: ${username}
-Caption: ${caption}
-Quality: ${quality}
-Format: ${format}
-Size: ${size}
-  `.trim(), m)   }
+ let anu= await fetchJson(`https://yx-api.herokuapp.com/api/download/twitterdl?url=${link}`)
+m.reply(wet)
+let anuu = await getBuffer (anu.result.SD)
+    await zidni.sendMessage(m.chat, { video: anuu,caption: `High Quality\n${anu.result.desc}`  }, { quoted: m })    }
       if (budy.match(`tiktok.com/`)){
    if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		 m.reply(mess.wait)
@@ -243,20 +234,14 @@ Size: ${size}
                        }
                     
         	  if (/https?:\/\/(fb\.watch|(www\.|web\.|m\.)?facebook\.com)/i.test(m.text)){
-        	  try {
-		 m.reply(mess.wait)
+        			 m.reply(mess.wait)
 		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		let ani = await fetchJson(`https://xteam.xyz/dl/fbv2?url=${link}&APIKEY=HIRO`)
-		let anu = ani.result.hd
+		let anu = ani.result.hd.url
 		let anok = ani.result.meta
-		   await zidni.sendMessage(m.chat, {video: {url: anu.url}, caption: anok.title},{ quoted: m })
+		   await zidni.sendMessage(m.chat, {video: {url: anu}, caption: anok.title},{ quoted: m })
   db.data.users[m.sender].limit -= 5		
-                       } catch (e) {
-                       let ano = await fetchJson(`https://api.akuari.my.id/downloader/fbdl?link=${link}`)
-                       let ah = ano.info
-                       let uh = ano.url
-                          await zidni.sendMessage(m.chat, {video: {url: uh.url}, caption: ah.title},{ quoted: m })
-                    }}                                                                                                                                                       
+                      }                                                                                                                                                       
 			if (budy.match(`www.icocofun.com`)) {
 		m.reply(mess.wait)
 		if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
@@ -352,6 +337,11 @@ break
                             } else zidni.reply(m.chat, `Uang anda tidak cukup untuk membeli ${q} limit dengan harga ${limit * q} money`,m)
                                   }}
                             break
+case'darkjokes':case'darkjoke':case'meme':{
+m.reply(wet)
+zidni.sendButtonImg(m.chat, await ( await fetch(global.api('xteam', '/asupan/darkjoke', {}, 'APIKEY'))).buffer(), 'Drag joles', '', 'Next', `${usedPrefix + command}`, m)
+}
+break
 	    case 'afk': {
                 let user = global.db.data.users[m.sender]
                 user.afkTime = + new Date
