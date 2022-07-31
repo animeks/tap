@@ -226,12 +226,12 @@ return await zidni.sendMessage(jid, buttonMessage, {quoted})
         } else return jid
     }
    
-    zidni.ev.on('contacts.update', update => {
-        for (let contact of update) {
-            let id = zidni.decodeJid(contact.id)
-            if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
-        }
-    })
+ zidni.ev.on('contacts.update', update => {
+for (let contact of update) {
+let id = zidni.decodeJid(contact.id)
+if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
+}
+})
 
     zidni.getName = (jid, withoutContact  = false) => {
         id = zidni.decodeJid(jid)
