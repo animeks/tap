@@ -157,6 +157,7 @@ var bod = m.body.split(" ");
 						a.includes("facebook.com") ||
 						a.includes("github.com") ||
 						a.includes("youtu.be") ||
+						a.includes("fb.watch") ||
 				        a.includes("youtube.com/watch?v=") ||
 				        a.includes("www.instagram.com") ||
 						a.includes("youtube.com/shorts") ||
@@ -232,8 +233,16 @@ let anuu = await getBuffer (anu.result.SD)
                     caption: 'Tiktok No Watermark'}, { quoted: m })
                  db.data.users[m.sender].limit -= 5
                        }
+                    if (budy.match(`fb.watch`)){
+                    		 m.reply(mess.wait)
+		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
+		db.data.users[m.sender].limit -= 5
+		let anu = await fetchJson(`https://api.akuari.my.id/downloader/fbdl?link=${link}`)
+     zidni.sendMessage(m.chat, {video: { url: anu.medias[0].url},
+                    caption: 'Facebook '+`${anu.medias[0].quality} `+`Size ${anu.medias[0].formattedSize}`}, { quoted: m })
+                    }
                     
-        	  if (/https?:\/\/(fb\.watch|(www\.|web\.|m\.)?facebook\.com)/i.test(m.text)){
+        	  if (/https?:\/\/((www\.|web\.|m\.)?facebook\.com)/i.test(m.text)){
         			 m.reply(mess.wait)
 		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		let ani = await fetchJson(`https://xteam.xyz/dl/fbv2?url=${link}&APIKEY=HIRO`)
@@ -300,7 +309,7 @@ Selama ${clockString(new Date - user.afkTime)}
   let full = /f$/i.test(command)
   if (!args[0]) return zidni.reply(m.chat, 'Tidak ada url', m)
   let url = /https?:\/\//.test(args[0]) ? args[0] : 'https://' + args[0]
-  let ss = await (await fetch(global.API('nrtm', '/api/ssweb', { delay: 1000, url, full }))).buffer()
+  let ss = await (await fetch(global.api('nrtm', '/api/ssweb', { delay: 1000, url, full }))).buffer()
   zidni.sendFile(m.chat, ss, 'screenshot.png', url, m)
 }
 break
