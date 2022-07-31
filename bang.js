@@ -97,9 +97,6 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
 				   anune =`100`
 susu = randomNomor(math(anune))
 db.data.users[m.sender].balance += susu}
- if (isCmd) {
-let susu = sender
-db.data.users[m.sender].num += susu}
         // Public & Self
         if (!zidni.public) {
             if (!m.key.fromMe) return
@@ -384,8 +381,8 @@ Selama ${clockString(new Date - user.afkTime)}
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
-        const repl = async (jid, text, quoted, options = {}) => zidni.sendMessage(chatId ? chatId : m.chat, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted:m }) 
-repl(`Hallo *@${sender.split("@")}*
+        repl = (text, options) => zidni.sendMessage(m.chat, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted:m })     
+ repl(`Hallo *@${sender.split("@")}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
 *•* Total User: ${Object.keys(global.db.data.users).length}
