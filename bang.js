@@ -1099,18 +1099,16 @@ break
 									
        case 'stickerwm': case 'swm': case 'stickergifwm': case 'sgifwm': {
         if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis		
-                let [teks1, teks2] = text.split`|`
-                if (!teks1) return m.reply(`Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`)
-                if (!teks2) return m.reply( `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`)
-            	m.reply(mess.wait)
+                if (!teks1) return m.reply(`Kirim/reply image/video dengan caption ${prefix + command} teks1 teks2`)
+              m.reply(mess.wait)
                 if (/image/.test(mime)) {
-                    let media = await zidni.downloadMediaMessage(qmsg)
-                    let encmedia = await zidni.sendImageAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
+                    let media = await zidni.downloadMediaMessage(quoted)
+                    let encmedia = await zidni.sendImageAsSticker(m.chat, media, m, { packname: teks1, author: '' })
                     await fs.unlinkSync(encmedia)
                 } else if (/video/.test(mime)) {
                     if ((quoted.msg || quoted).seconds > 11) return m.reply('Maksimal 10 detik!')
-                    let media = await zidni.downloadMediaMessage(qmsg)
-                    let encmedia = await zidni.sendVideoAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
+                    let media = await zidni.downloadMediaMessage(quoted)
+                    let encmedia = await zidni.sendVideoAsSticker(m.chat, media, m, { packname: teks1, author: '' })
                     await fs.unlinkSync(encmedia)
                 } else {
                     return m.reply( `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik`)
