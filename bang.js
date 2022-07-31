@@ -361,9 +361,7 @@ break
             case 'info':{
             reply(`Total User: ${Object.keys(global.db.data.users).length}\nRuntime: ${runtime(process.uptime())}`)}
             break
-case 'youtube':case'ytshorts':case'facebook':case'twitter':case'instagram':case'tiktok':case'cocofun':case'mediafire':case'pinterest':case'github':{
-m.reply('Enter Parameter Url\nExample: https://youtu.be/3mWoJxJRJLA\n*Send Url without using Command*')}
-break 
+
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
