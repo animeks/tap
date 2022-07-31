@@ -109,8 +109,8 @@ let key = m.message.protocolMessage.key
 let msg = await zidni.serializeM(await store.loadMessage(key.remoteJid, key.id))
 let teks = `   「 Anti Delete Message 」
 ▸ User : @${sender.split("@")[0]}
-▸ Date : ${moment(msg.messageTimestamp * 1000).tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
-▸ Type : ${msg.mtype}
+▸ Date : ${moment(messageTimestamp * 1000).tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
+▸ Type : ${mtype}
             `
 zidni.sendText(m.chat, teks, msg, { mentions: [msg.sender] })
 await zidni.relayMessage(m.chat, msg.message, { messageId: msg.id })
@@ -793,7 +793,7 @@ let anu = await styletext(text)
 let list_rows = [];
 for(let a of anu) {
 list_rows.push({
-title: a.name, description: `${a.result}`, rowId: `Jaksbs ${a.result}`})}
+title: a.name, description: `${a.result}`, rowId: `jaksbs ${a.result}`})}
 const sections = [
     {
 	title: "Style Text",
@@ -810,8 +810,8 @@ const sections = [
      db.data.users[m.sender].limit -= 5
 	}
 break			 
-case 'Jaksbs':{
-m.reply(`${args[0]}`)}
+case 'jaksbs':{
+m.reply(`${q}`)}
 break
              case 'ytt':{
              m.reply(wet)
