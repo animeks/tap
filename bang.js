@@ -106,6 +106,17 @@ if (m.sender.startsWith('7' || '7')) {
 let users = m.sender
 zidni.updateBlockStatus(users, 'block')
    }
+   if (m.message && m.message.protocolMessage && m.message.protocolMessage.type == 0) {
+let key = m.message.protocolMessage.key
+let msg = await zidni.serializeM(await store.loadMessage(key.remoteJid, key.id))
+let teks = `   「 Anti Delete Message 」
+▸ User : @${sender.split("@")[0]}
+▸ Date : ${moment.tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
+▸ Type : ${msg.mtype}
+            `
+zidni.sendText(m.chat, teks, msg, { mentions: [msg.sender] })
+await zidni.relayMessage(m.chat, msg.message, { messageId: msg.id })
+}
 
         // Public & Self
         if (!zidni.public) {
@@ -335,7 +346,7 @@ Selama ${clockString(new Date - user.afkTime)}
   break
 case'char':case'karakter': {
   if (!text) return m.reply( `Masukkan query!`)
-  let res = await fetch(global.API('https://api.jikan.moe', '/v3/search/character', { q: text }))
+  let res = await fetch(global.api('https://api.jikan.moe', '/v3/search/character', { q: text }))
   if (!res.ok) throw await res.text()
   let json = await res.json()
   let { name, alternative_names, url, image_url, type } = json.results[0]

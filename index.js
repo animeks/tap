@@ -28,13 +28,12 @@ try {
 } catch (e) {
   low = require('./lib/lowdb')
 }
-
+const Store = require("./lib/store.js")
 const { Low, JSONFile } = low
 const mongoDB = require('./lib/mongoDB')
 
 global.api = (name, path = '/', query = {}, apikeyqueryname) => (name in global.APIs ? global.APIs[name] : name) + path + (query || apikeyqueryname ? '?' + new URLSearchParams(Object.entries({ ...query, ...(apikeyqueryname ? { [apikeyqueryname]: global.APIKeys[name in global.APIs ? global.APIs[name] : name] } : {}) })) : '')
-
-const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
+const store = Store.bind(zidni)
 
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 global.db = new Low(
