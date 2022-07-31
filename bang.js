@@ -221,10 +221,19 @@ if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut
 	db.data.users[m.sender].limit -= 10
 }
 if (/^.*twitter.com/i.test(m.text)){
- let anu= await fetchJson(`https://yx-api.herokuapp.com/api/download/twitterdl?url=${link}`)
-m.reply(wet)
-let anuu = await getBuffer (anu.result.SD)
-    await zidni.sendMessage(m.chat, { video: anuu,caption: `High Quality\n${anu.result.desc}`  }, { quoted: m })    }
+  let res = await fetch(global.api('xteam', '/dl/twitter', { url: link }, 'APIKEY'))
+  if (res.status != 200) throw await res.text()
+  let json = await res.json()
+  if (!json.status) throw json
+  let { name, username, caption, quality, format, size, video_url } = json.result
+  zidni.sendFile(m.chat, video_url, 'file.mp4', `
+Name: ${name}
+Username: ${username}
+Caption: ${caption}
+Quality: ${quality}
+Format: ${format}
+Size: ${size}
+  `.trim(), m)   }
       if (budy.match(`tiktok.com/`)){
    if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		 m.reply(mess.wait)
@@ -234,6 +243,7 @@ let anuu = await getBuffer (anu.result.SD)
                        }
                     
         	  if (/https?:\/\/(fb\.watch|(www\.|web\.|m\.)?facebook\.com)/i.test(m.text)){
+        	  try {
 		 m.reply(mess.wait)
 		 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		let ani = await fetchJson(`https://xteam.xyz/dl/fbv2?url=${link}&APIKEY=HIRO`)
@@ -241,7 +251,12 @@ let anuu = await getBuffer (anu.result.SD)
 		let anok = ani.result.meta
 		   await zidni.sendMessage(m.chat, {video: {url: anu.url}, caption: anok.title},{ quoted: m })
   db.data.users[m.sender].limit -= 5		
-                    }                                                                                                                                                        
+                       } catch (e) {
+                       let ano = await fetchJson(`https://api.akuari.my.id/downloader/fbdl?link=${link}`)
+                       let ah = ano.info
+                       let uh = ano.url
+                          await zidni.sendMessage(m.chat, {video: {url: uh.url}, caption: ah.title},{ quoted: m })
+                    }}                                                                                                                                                       
 			if (budy.match(`www.icocofun.com`)) {
 		m.reply(mess.wait)
 		if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
@@ -293,15 +308,17 @@ Selama ${clockString(new Date - user.afkTime)}
             user.afkTime = -1
             user.afkReason = ''
         }
-	    if (/ssweb/i.test(command)){
-  let full = /f$/i.test(command)
-  let url = /https?:\/\//.test(args[0]) ? args[0] : 'https://' + args[0]
-  let ss = await (await fetch(api('nrtm', '/api/ssweb', { delay: 1000, url, full }))).buffer()
-  zidni.sendFile(m.chat, ss, 'screenshot.png', url, m, 0, { thumbnail: ss })}
-      if (/limit/i.test(command)){
+	         if (/limit/i.test(command)){
    zidni.sendTextWithMentions(m.chat, `Limit ${pushname} Tersisa ${global.db.data.users[m.sender].limit}\nAnd Balance ${db.data.users[sender].balance}`, m)}
-
         switch(command) {
+        case'ss':case'ssweb':{
+  let full = /f$/i.test(command)
+  if (!args[0]) return zidni.reply(m.chat, 'Tidak ada url', m)
+  let url = /https?:\/\//.test(args[0]) ? args[0] : 'https://' + args[0]
+  let ss = await (await fetch(global.API('nrtm', '/api/ssweb', { delay: 1000, url, full }))).buffer()
+  zidni.sendFile(m.chat, ss, 'screenshot.png', url, m)
+}
+break
        case'daily':case'klaim': case 'claim':{
               function kol(ms) {
   let h = Math.floor(ms / 3600000)
@@ -345,6 +362,9 @@ Selama ${clockString(new Date - user.afkTime)}
             case 'info':{
             reply(`Total User: ${Object.keys(global.db.data.users).length}\nRuntime: ${runtime(process.uptime())}`)}
             break
+case 'youtube':case'ytshorts':case'facebook':case'twitter':case'instagram':case'tiktok':case'cocofun':case'mediafire':case'pinterest':case'github':{
+m.reply('Enter Parameter Url\nExample: https://youtu.be/3mWoJxJRJLA\n*Send Url without using Command*')}
+break 
          case'papal':case'akakkaka':case'help':case'menu':{
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
@@ -355,7 +375,7 @@ reply(`Hallo *${pushname}*
 *•* Runtime: ${runtime(process.uptime())}
 *•* Web: https://m.zidni.xyz
 ${read}
-_*メ Download*_
+_*メ Auto Download*_
 *•* youtube
 *•* ytshorts
 *•* facebook
@@ -386,6 +406,7 @@ _*メ Other*_
 *•* tourl
 *•* ssweb
 *•* waifu
+*•* neko
 *•* storyanime
 *•* storyml
 *•* storyff
@@ -413,6 +434,13 @@ _*メ Other*_
  
              }
 break
+case'neko':{
+  let res = await fetch('https://api.waifu.pics/sfw/neko')
+  if (!res.ok) throw await res.text()
+  let json = await res.json()
+  if (!json.url) throw 'Error!'
+  zidni.sendFile(m.chat, json.url, '', 'Nyaa', m)}
+break
 case 'bc1': case 'broadcast':{
 			    if (!isOwner) return m.reply(mess.OnlyOwner)
 		                 var data = await store.chats.all()
@@ -429,7 +457,7 @@ case 'bc1': case 'broadcast':{
 		                 let anu = await TelegraPh(rep)
 		                 let repl = await getBuffer(anu)
                             for (let i of data) {
-                             zidni.sendMessage(i.id, {image: repl, caption: `${args[1]}`})}
+                             zidni.sendMessage(i.id, {image: repl, caption: `${q}`})}
                              } 
                              break
                              case'bc3':{
@@ -440,13 +468,13 @@ case 'bc1': case 'broadcast':{
 		                 let anu = await TelegraPh(rep)
 		                 let repl = await getBuffer(anu)
                             for (let i of data) {
-                             zidni.sendMessage(i.id, {video: repl, caption: `${args[1]}`})}}
+                             zidni.sendMessage(i.id, {video: repl, caption: `${q}`})}}
                             break
 case 'shaun':{
 m.reply(wet)
 let rep = await zidni.downloadAndSaveMediaMessage(quoted)
  let anu = await TelegraPh(rep)
-zidni.sendMessage(m.chat, {video: {url:`https://xteam.xyz/videomaker/shaunthesheep?url=${anu}&APIKEY=HIRO`}, caption: `Nih}`})}
+zidni.sendMessage(m.chat, {video: {url:`https://xteam.xyz/videomaker/shaunthesheep?url=${anu}&APIKEY=HIRO`}, caption: `Nih`})}
 break
 case'brainly':{
     if (!text) return m.reply( `uhm.. teksnya mana?\n\ncontoh:\n${usedPrefix + command} kapan indonesia merdeka`)
@@ -483,7 +511,7 @@ case 'waifu':{
             break
 case'chat':{
 let bot = [{ buttonId: 'akakkaka', buttonText: { displayText: 'Ok' }, type: 1 }]
-	zidni.sendButtonText(`${text}@s.whatsapp.net`, bot, `Halo @${text} Aku Adalah Bot WhatsApp Ada Pesan Nih Dari @${sender.split("@")}\n*${args[1]}*`, ``, m, {mentions: sender})
+	zidni.sendButtonText(`${args[0]}@s.whatsapp.net`, bot, `Halo @${args[0]} Aku Adalah Bot WhatsApp Ada Pesan Nih Dari @${sender.split("@")}\n*${args[1]}*`, ``, m, {mentions: sender})
 }
 break
                    		    case 'storyanim': case 'storyanime':{
