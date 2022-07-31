@@ -85,11 +85,9 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
             if (chats) {
                 if (!('mute' in chats)) chats.mute = false
                 if (!('antilink' in chats)) chats.antilink = true
-                if (!('delete' in chat)) chat.delete = true
             } else global.db.data.chats[m.chat] = {
                 mute: false,
                 antilink: true,
-                delete: true,
             }
 	
         } catch (err) {
@@ -152,9 +150,11 @@ zidni.updateBlockStatus(users, 'block')
          let p = await zidni.downloadAndSaveMediaMessage(quoted)         
             let any = await TelegraPh(p)
      	zidni.sendImageAsSticker(m.chat, p, m, { packname: `Auto Sticker\nCreated By`, author: `\nZidniGanz` })
-     	m.reply(`Url This Image : ${any}`)
      	}
-  
+  	 if (!m.key.fromMe && !m.isGroup && !/webp/.test(mime) && /video/.test(mime)) {
+         let p = await zidni.downloadAndSaveMediaMessage(quoted)         
+     	zidni.sendVideoAsSticker(m.chat, p, m, { packname: `Auto Sticker\nCreated By`, author: `\nZidniGanz` })
+     	}
 
       // Mute Chat
       if (db.data.chats[m.chat].mute && !groupAdmins && !isCreator) {
@@ -1093,22 +1093,26 @@ break
                 })
             }
             break
-									case 'swm': case 'wm':{
-									 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-		db.data.users[m.sender].limit -= 5
-     if (!quoted) return m.reply( `Balas Video/Image/stiker Dengan Caption ${prefix + command}`)
-                    if (/webp/.test(mime) && /image/.test(mime)) {
-                let media = await quoted.download()
-                let encmedia = await zidni.sendImageAsSticker(m.chat, media, m, { packname: `${q}`, author:``})
-                await fs.unlinkSync(encmedia)
-            } else if (/webp/.test(mime) && /video/.test(mime)) {
-                if ((quoted.msg || quoted).seconds > 11) return m.reply('Maksimal 10 detik!')
-                let media = await quoted.download()
-                let encmedia = await zidni.sendVideoAsSticker(m.chat, media, m, { packname: `${q}`, author: ``})
-                await fs.unlinkSync(encmedia)
-            } else {
-                return m.reply( `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik`)
+									
+       case 'stickerwm': case 'swm': case 'stickergifwm': case 'sgifwm': {
+        if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis		
+                let [teks1, teks2] = text.split`|`
+                if (!teks1) throw `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`
+                if (!teks2) throw `Kirim/reply image/video dengan caption ${prefix + command} teks1|teks2`
+            	m.reply(mess.wait)
+                if (/image/.test(mime)) {
+                    let media = await zidni.downloadMediaMessage(qmsg)
+                    let encmedia = await zidni.sendImageAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
+                    await fs.unlinkSync(encmedia)
+                } else if (/video/.test(mime)) {
+                    if ((quoted.msg || quoted).seconds > 11) return m.reply('Maksimal 10 detik!')
+                    let media = await zidni.downloadMediaMessage(qmsg)
+                    let encmedia = await zidni.sendVideoAsSticker(m.chat, media, m, { packname: teks1, author: teks2 })
+                    await fs.unlinkSync(encmedia)
+                } else {
+                    return m.reply( `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik`)
                 }
+                db.data.users[m.sender].limit -= 5
             }
             break
         default:
