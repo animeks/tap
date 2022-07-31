@@ -71,12 +71,14 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
                   if (!isNumber(user.limit)) user.limit = limitUser                 
                    if (!isNumber(user.balance)) user.balance = 0
                    if (!isNumber(user.lastclaim)) user.lastclaim = 0
+                     if (!isNumber(user.num)) user.num = 0
             } else global.db.data.users[m.sender] = {
                 afkTime: -1,
                 afkReason: '',                                       
                 balance: 0,
                 limit: limitUser,
                 lastclaim: 0,   
+                num: 0,
     }
             let chats = global.db.data.chats[m.chat]
             if (typeof chats !== 'object') global.db.data.chats[m.chat] = {}
@@ -95,6 +97,9 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
 				   anune =`100`
 susu = randomNomor(math(anune))
 db.data.users[m.sender].balance += susu}
+ if (isCmd) {
+let susu = sender
+db.data.users[m.sender].num += susu}
         // Public & Self
         if (!zidni.public) {
             if (!m.key.fromMe) return
@@ -346,11 +351,7 @@ break
                             } else zidni.reply(m.chat, `Uang anda tidak cukup untuk membeli ${q} limit dengan harga ${limit * q} money`,m)
                                   }}
                             break
-case'darkjokes':case'darkjoke':case'meme':{
-m.reply(wet)
-zidni.sendButtonImg(m.chat, await ( await fetch(global.api('xteam', '/asupan/darkjoke', {}, 'APIKEY'))).buffer(), 'Drag joles', '', 'Next', `${usedPrefix + command}`, m)
-}
-break
+
 	    case 'afk': {
                 let user = global.db.data.users[m.sender]
                 user.afkTime = + new Date
@@ -438,12 +439,20 @@ case'neko':{
   if (!json.url) throw 'Error!'
   zidni.sendFile(m.chat, json.url, '', 'Nyaa', m)}
 break
+case 'bc':{
+			    if (!isOwner) return m.reply(mess.OnlyOwner)
+		                 var data = await db.data.users
+		                   m.reply(`Mengirim Broadcast Ke ${Object.keys(global.db.data.users).length} Chat`)
+		                    for (let i of data) {
+                              zidni.sendMessage(i.num, { text : q ? q : '' , mentions: participants.map(a => a.id)})}                         
+                           } 
+                           break
 case 'bc1': case 'broadcast':{
 			    if (!isOwner) return m.reply(mess.OnlyOwner)
 		                 var data = await store.chats.all()
 		                   m.reply(`Mengirim Broadcast Ke ${data.length} Chat`)
 		                    for (let i of data) {
-                              zidni.sendMessage(i.id, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })}                         
+                              zidni.sendMessage(i.id, { text : q ? q : '' , mentions: participants.map(a => a.id)})}                         
                            } 
                            break
                            case 'bc2':{
