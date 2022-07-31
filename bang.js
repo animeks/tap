@@ -108,7 +108,7 @@ db.data.users[m.sender].num += susu}
 let key = m.message.protocolMessage.key
 let msg = await zidni.serializeM(await store.loadMessage(key.remoteJid, key.id))
 let teks = `   「 Anti Delete Message 」
-▸ User : @${msg.sender.split("@")[0]}
+▸ User : @${sender.split("@")[0]}
 ▸ Date : ${moment(msg.messageTimestamp * 1000).tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB
 ▸ Type : ${msg.mtype}
             `
@@ -811,7 +811,7 @@ const sections = [
 	}
 break			 
 case 'Jaksbs':{
-m.reply(`${text}`)}
+m.reply(`${args[0]}`)}
 break
              case 'ytt':{
              m.reply(wet)
