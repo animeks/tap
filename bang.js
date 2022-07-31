@@ -751,6 +751,30 @@ const sections = [
 }
      zidni.sendMessage(from, listMessage,{ quoted: m })}
 break			 
+case 'style': case 'styletext': {
+if (!args.join(" ")) return m.reply('Masukkan Query text!')
+const {  styletext} = require('./lib/scraper.js')
+let anu = await styletext(text)
+let list_rows = [];
+for(let a of anu) {
+list_rows.push({
+title: a.result, description: `${a.result}`, rowId: `Jaksbs`})}
+const sections = [
+    {
+	title: "Style Text",
+	rows: list_rows
+	 },]
+   const listMessage = {
+  text: `Result Styletext For ${q}`,
+  footer: `${pushname}`,
+  title: "",
+  buttonText: "Chose One",
+  sections
+}
+     zidni.sendMessage(from, listMessage,{ quoted: m })
+     db.data.users[m.sender].limit -= 5
+	}
+break			 
              case 'ytt':{
              m.reply(wet)
              let anu = await fetchJson(`http://zekais-api.herokuapp.com/spotifydl?url=${q}&apikey=zekais`)
