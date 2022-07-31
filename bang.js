@@ -71,14 +71,14 @@ module.exports = zidni = async (zidni, m, chatUpdate, store) => {
                   if (!isNumber(user.limit)) user.limit = limitUser                 
                    if (!isNumber(user.balance)) user.balance = 0
                    if (!isNumber(user.lastclaim)) user.lastclaim = 0
-                     if (!isNumber(user.num)) user.num = 0
+                     if (!isNumber(user.num)) user.num = ''
             } else global.db.data.users[m.sender] = {
                 afkTime: -1,
                 afkReason: '',                                       
                 balance: 0,
                 limit: limitUser,
                 lastclaim: 0,   
-                num: 0,
+                num: '',
     }
             let chats = global.db.data.chats[m.chat]
             if (typeof chats !== 'object') global.db.data.chats[m.chat] = {}
