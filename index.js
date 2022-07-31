@@ -145,7 +145,7 @@ const mor = String.fromCharCode(8206)
     
     
     
-        zidni.ev.on('message.delete', async ({ remoteJid, fromMe, id, participant }) => {
+        zidni.ev.on('message.delete', async delete({ remoteJid, fromMe, id, participant })) {
          if (fromMe) return
         let chats = Object.entries(await this.chats).find(([user, data]) => data.messages && data.messages[id])
         if (!chats) return
@@ -161,7 +161,7 @@ Untuk mematikan fitur ini, ketik
         })
         await this.delay(1000)
         zidni.copyNForward(msg.key.remoteJid, msg).catch(e => console.log(e, msg))
-    })
+    }
 
 
 

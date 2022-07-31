@@ -372,7 +372,7 @@ Selama ${clockString(new Date - user.afkTime)}
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
         repl = (text, options) => zidni.sendMessage(m.chat, { text: text, mentions: [sender], ...options }, { quoted:m })     
- repl(`Hallo *@${sender}*
+ repl(`Hallo *@${sender.split("@")}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
 *•* Total User: ${Object.keys(global.db.data.users).length}
