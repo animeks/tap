@@ -28,7 +28,7 @@ try {
 } catch (e) {
   low = require('./lib/lowdb')
 }
-const Store = require("./lib/store.js")
+const Store = require("./lib/Store.js")
 const { Low, JSONFile } = low
 const mongoDB = require('./lib/mongoDB')
 
@@ -74,7 +74,6 @@ async function startZidni() {
         browser: ['Hisoka Multi Device','Safari','1.0.0'],
         auth: state
     })
-
  const store = Store.bind(zidni)
     
     // anticall auto block
@@ -150,7 +149,7 @@ const mor = String.fromCharCode(8206)
     reply = async (text, chatId, options) => {
         const moment = require("moment-timezone");
         const salam = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
-    	let pp = await zidni.profilePictureUrl(m.sender, 'image').catch(_ => 'https://telegra.ph/file/a2ae6cbfa40f6eeea0cf1.jpg')
+    	let pp = await zidni.profilePictureUrl(m.sender, 'image').catch(_ => 'https://telegra.ph/file/360eb27e80c0645776817.jpg')
         let { data } = await zidni.getFile(await(await require('node-fetch')(pp)).buffer())       
         zidni.reply(chatId ? chatId : m.chat, text, m, { contextInfo: { mentionedJid: zidni.parseMention(text), externalAdReply: { title: `Assalamualaikum 👋`, body: '', sourceUrl: 'https://wa.me/c/79303859866', thumbnail: data,showAdAttribution: true }}, options })
     }
@@ -218,20 +217,20 @@ const buttonMessage = {
 return await zidni.sendMessage(jid, buttonMessage, {quoted})
   }
     // Setting
-    zidni.decodeJid = (jid) => {
+        zidni.decodeJid = (jid) => {
         if (!jid) return jid
         if (/:\d+@/gi.test(jid)) {
             let decode = jidDecode(jid) || {}
             return decode.user && decode.server && decode.user + '@' + decode.server || jid
         } else return jid
     }
-   
- zidni.ev.on('contacts.update', update => {
-for (let contact of update) {
-let id = zidni.decodeJid(contact.id)
-if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
-}
-})
+    
+    zidni.ev.on('contacts.update', update => {
+        for (let contact of update) {
+            let id = zidni.decodeJid(contact.id)
+            if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
+        }
+    })
 
     zidni.getName = (jid, withoutContact  = false) => {
         id = zidni.decodeJid(jid)
