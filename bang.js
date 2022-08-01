@@ -157,8 +157,7 @@ await zidni.relayMessage(m.chat, msg.message, { messageId: msg.id })
       if (!m.key.fromMe && m.isGroup && !/webp/.test(mime) && /image/.test(mime)) {
          let p = await zidni.downloadAndSaveMediaMessage(quoted)         
      	zidni.sendImageAsSticker(m.chat, p, m, { packname: `Auto Sticker\nCreated By`, author: `\nZidniGanz` })
-     	     	setTimeout( () => { m.reply('Foto Berhasil Di Ubah Ke Stiker Untuk Mematikan Fitur AutoStiker Ketik\n*#autosticker off*')}, 3000)}}
-     	
+     	}
      	 if (!m.key.fromMe && !m.isGroup && !/webp/.test(mime) && /image/.test(mime)) {
          let p = await zidni.downloadAndSaveMediaMessage(quoted)         
             let any = await TelegraPh(p)
