@@ -129,10 +129,10 @@ const mor = String.fromCharCode(8206)
 		const ftrol ={key: {fromMe: false,"participant":"0@s.whatsapp.net", "remoteJid": "6289523258649-1604595598@g.us"}, "message": {orderMessage: {itemCount: metadata.participants.length,status: 200, thumbnail: ppmem2, surface: 200, message: `さ Sayonara さ`, orderTitle: 'memek', sellerJid: '0@s.whatsapp.net'}}, contextInfo: {"forwardingScore":999,"isForwarded":true},sendEphemeral: true}	
 					    if (anu.action == 'add') {
               		zidni.sendButtonText(anu.id, bot, `Halo @${num.split("@")[0]}\nSelamat Datang Di Grup ${metadata.subject}`, '', ftroli, {mentions: men})       
-              		  zidni.sendMessage(`${num}`, {text: `Halo Kak Selamat Datang Di Grup *${metadata.subject}*${r}\nMade By : m.zidni.xyz`})    
+              		  zidni.sendMessage(`${num}`, {text: `Halo Kak Selamat Datang Di Grup *${metadata.subject}*${r}\n\n_Made By : m.zidni.xyz_`})    
 								   } else if (anu.action == 'remove') {
             			zidni.sendButtonText(anu.id, bit, `@${num.split("@")[0]} Telah Keluar Dari Grup ${metadata.subject}`, '', ftrol, {mentions: men}) 
-            			  zidni.sendMessage(`${num}`, {text: `Yah Kak Kok Kamu Keluar Dari Grup Sih?`})
+            			  zidni.sendMessage(`${num}`, {text: `Yah Kak Kok Kamu Keluar Dari Grup *${metadata.subject}* Sih?`})
 							 }
             }
         } catch (err) {
@@ -146,16 +146,8 @@ const mor = String.fromCharCode(8206)
     zidni.reply = (jid, text = '', quoted, options) => {
         return Buffer.isBuffer(text) ? zidni.sendFile(jid, text, 'file', '', quoted, false, options) : zidni.sendMessage(jid, { contextInfo: { mentionedJid: zidni.parseMention(text)}, ...options, text }, { quoted, ...options })
     }    
-    reply = async (text, chatId, options) => {
-        const moment = require("moment-timezone");
-        const salam = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
-    	let pp = await zidni.profilePictureUrl(m.sender, 'image').catch(_ => 'https://telegra.ph/file/360eb27e80c0645776817.jpg')
-        let { data } = await zidni.getFile(await(await require('node-fetch')(pp)).buffer())       
-        zidni.reply(chatId ? chatId : m.chat, text, m, { contextInfo: { mentionedJid: zidni.parseMention(text), externalAdReply: { title: `Assalamualaikum 👋`, body: '', sourceUrl: 'https://wa.me/c/79303859866', thumbnail: data,showAdAttribution: true }}, options })
-    }
-    
-    
-    
+ reply = (text, chatId, options) => {
+ zidni.sendMessage(chatId ? chatId : m.chat, { text: text, contextInfo: { mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'),showAdAttribution: true }, ...options }, { quoted:m })}
     
      zidni.sendFile = async (jid, path, filename = '', caption = '', quoted, ptt = false, options = {}) => {
         let type = await zidni.getFile(path, true)

@@ -189,7 +189,44 @@ var bod = m.body.split(" ");
 						a.includes("twitter.com") ||
 					    a.includes("pinterest.com") ||
 					    a.includes("pin.it") ||
-						a.includes("soundcloud.com"));
+						a.includes("drive.google.com"));
+						
+						if (budy.match('drive.google.com')){
+const { sizeFormatter } = require('human-readable')
+let formatSize = sizeFormatter({
+	std: 'JEDEC', decimalPlaces: 2, keepTrailingZeroes: false, render: (literal, symbol) => `${literal} ${symbol}B`
+})
+m.reply(wet)
+async function GDriveDl(url) {
+	let id
+	if (!(url && url.match(/drive\.google/i))) throw 'Invalid URL'
+	id = (url.match(/\/?id=(.+)/i) || url.match(/\/d\/(.*?)\//))[1]
+	if (!id) throw 'ID Not Found'
+	let res = await fetch(`https://drive.google.com/uc?id=${id}&authuser=0&export=download`, {
+		method: 'post',
+		headers: {
+			'accept-encoding': 'gzip, deflate, br',
+			'content-length': 0,
+			'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+			'origin': 'https://drive.google.com',
+			'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+			'x-client-data': 'CKG1yQEIkbbJAQiitskBCMS2yQEIqZ3KAQioo8oBGLeYygE=',
+			'x-drive-first-party': 'DriveWebUi',
+			'x-json-requested': 'true' 
+		}
+	})
+	let { fileName, sizeBytes, downloadUrl } =  JSON.parse((await res.text()).slice(4))
+	if (!downloadUrl) throw 'Link Download Limit!'
+	let data = await fetch(downloadUrl)
+	if (data.status !== 200) throw data.statusText
+	return { downloadUrl, fileName, fileSize: formatSize(sizeBytes), mimetype: data.headers.get('content-type') }
+}
+	GDriveDl(link).then(async (res) => {
+		if (!res) throw res
+		await m.reply(JSON.stringify(res, null, 2))
+		zidni.sendMessage(m.chat, { document: { url: res.downloadUrl }, fileName: res.fileName, mimetype: res.mimetype }, { quoted: m })
+	})
+}
 					if (budy.match(`youtu.be`)){
 				m.reply(mess.wait)
 				if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
@@ -297,7 +334,7 @@ let anuu = await getBuffer (anu.result.SD)
 			  if (/^.*instagram.com\/(p|reel|tv)/i.test(m.text)) {
 			 m.reply(mess.wait)
 			 if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
-	  let anu = await fetchJson(`http://zekais-api.herokuapp.com/igdl2?url=${link}&apikey=zekais`)
+	  let anu = await fetchJson(`http://api.zekais.com/igdl2?url=${link}&apikey=zekais`)
      zidni.sendFile(m.chat, anu.result[0].url, 'ig.' + anu.result[0].type, `Instagram • ${anu.result[0].type}`, m)
      	db.data.users[m.sender].limit -= 5
  }
@@ -328,222 +365,8 @@ Selama ${clockString(new Date - user.afkTime)}
 	         if (/limit/i.test(command)){
    zidni.sendTextWithMentions(m.chat, `Limit ${pushname} Tersisa ${global.db.data.users[m.sender].limit}\nAnd Balance ${db.data.users[sender].balance}`, m)}
         switch(command) {
-        case'tembak':case'jadian':{
-	if(isNaN(text)) {
-  	var number = text.split`@`[1]
-  } else if(!isNaN(text)) {
-  	var number = text
-  }
-
-  if(!text && !m.quoted) return zidni.reply(m.chat, `Masukan nomor, tag target atau balas pesan target`, m)
-  
-  if(isNaN(number)) return zidni.reply(m.chat, `_*Nomor tidak valid.*_`, m)
-  if(number.length > 15) return zidni.reply(m.chat, `*_Format Tidak Valid.*_`, m)
-  try {
-		if(text) {
-			var user = number + '@s.whatsapp.net'
-		} else if(m.quoted.sender) {
-			var user = m.quoted.sender
-		} else if(m.mentionedJid) {
-  		  var user = number + '@s.whatsapp.net'
-			}  
-		} catch (e) {
-  } finally {
-    let groupMetadata = m.isGroup ? await zidni.groupMetadata(m.chat) : {}
-    let participants = m.isGroup ? groupMetadata.participants : []
-    let users = m.isGroup ? participants.find(u => u.id == user) : {}
-    if(!users) return zidni.reply(m.chat, `*_Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.*_`, m)
-    if(user === m.sender) return zidni.reply(m.chat, `_*Tidak bisa berpacaran dengan diri sendiri.*_`, m)
-    if(user === zidni.user.jid) return zidni.reply(m.chat, `_*Tidak bisa berpacaran dengan saya. :')*_`, m)
-
-    if (typeof global.db.data.users[user] == "undefined") return m.reply("_*Orang yang anda tag tidak terdaftar di dalam database.*_")
-    
-    if(global.db.data.users[m.sender].pasangan != "" && global.db.data.users[global.db.data.users[m.sender].pasangan].pasangan == m.sender && global.db.data.users[m.sender].pasangan != user){
-      zidni.sendText(m.chat,`Kamu sudah berpacaran dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}\n\nSilahkan putus dulu (ketik .putus untuk memutuskan hubungan) untuk menembak @${user.split('@')[0]}\n\nBtw yang setia dikit banget!`,m, {
-        mentions: [user,global.db.data.users[m.sender].pasangan]
-      })
-    }else if(global.db.data.users[user].pasangan != ""){
-      var pacar = global.db.data.users[user].pasangan
-      if (global.db.data.users[pacar].pasangan == user){
-        if (m.sender == pacar && global.db.data.users[m.sender].pasangan == user) return zidni.reply(m.chat,`Anda sudah berpacaran dengan @${beb.split('@')[0]}`,m,{contextInfo: {
-          mentions: [beb]
-        }})
-        zidni.sendText(m.chat,`Maaf, @${user.split('@')[0]} sudah berpacaran dengan @${pacar.split('@')[0]}\nSilahkan cari pasangan lain!`,m,{
-          mentions: [user,pacar]
-        })
-      }else{
-        global.db.data.users[m.sender].pasangan = user
-        zidni.sendText(m.chat,`Anda baru saja mengajak @${user.split('@')[0]} berpacaran\n\nSilahkan menunggu jawaban darinya!\n\nKetik *${usedPrefix}terima @user* untuk menerima\n*${usedPrefix}tolak @user untuk menolak*`,m,{
-          mentions: [user]
-        })
-      }
-    }else if (global.db.data.users[user].pasangan == m.sender){
-      global.db.data.users[m.sender].pasangan = user
-      zidni.sendText(m.chat,`Selamat anda resmi berpacaran dengan @${user.split('@')[0]}\n\nSemoga langgeng dan bahagia selalu 🥳🥳🥳`,m, {
-        mentions: [user]
-      })
-    }else {
-      global.db.data.users[m.sender].pasangan = user
-      zidni.sendText(m.chat,`Kamu baru saja mengajak @${user.split('@')[0]} berpacaran\n\nSilahkan menunggu jawaban darinya!\n\nKetik *${usedPrefix}terima @user* untuk menerima\n*${usedPrefix}tolak @user untuk menolak*`,m,{
-        mentions: [user]
-      })
-    }
-	}	
-}
-break
-case'terima':{
-	if(isNaN(text)) {
-  	var number = text.split`@`[1]
-  } else if(!isNaN(text)) {
-  	var number = text
-  }
-
-  if(!text && !m.quoted) return zidni.reply(m.chat, `Berikan nomor, tag atau balas pesan target.`, m)
-  
-  if(isNaN(number)) return zidni.reply(m.chat, `Nomor yang anda masukan tidak salah!`, m)
-  if(number.length > 15) return zidni.reply(m.chat, `Format salah!`, m)
-  try {
-		if(text) {
-			var user = number + '@s.whatsapp.net'
-		} else if(m.quoted.sender) {
-			var user = m.quoted.sender
-		} else if(m.mentionedJid) {
-  		  var user = number + '@s.whatsapp.net'
-			}  
-		} catch (e) {
-  } finally {
-    let groupMetadata = m.isGroup ? await zidni.groupMetadata(m.chat) : {}
-    let participants = m.isGroup ? groupMetadata.participants : []
-    let users = m.isGroup ? participants.find(u => u.id == user) : {}
-    if(!users) return zidni.reply(m.chat, `Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.`, m)
-    if(user === m.sender) return zidni.reply(m.chat, `Tidak bisa berpacaran dengan diri sendiri!`, m)
-    if(user === zidni.user.jid) return zidni.reply(m.chat, `Tidak bisa berpacaran dengan saya t_t`, m)
-    
-    if(global.db.data.users[user].pasangan != m.sender){
-      zidni.sendText(m.chat,`Maaf @${user.split('@')[0]} tidak sedang menembak anda`,m, {
-        mentions: [user]
-      })
-    }else{
-      global.db.data.users[m.sender].pasangan = user
-      zidni.sendText(m.chat,`Selamat anda resmi berpacaran dengan @${user.split('@')[0]}\n\nSemoga langgeng dan bahagia selalu @${user.split('@')[0]} 💓 @${m.sender.split('@')[0]} 🥳🥳🥳`,m, {
-        mentions: [m.sender,user]
-      })
-    }
-	}	
-}
-break
-case 'putus':{
-  ayg = global.db.data.users[m.sender]
-
-  if(ayg.pasangan == ""){
-    return zidni.reply(m.chat,`Anda tidak memiliki pasangan.`,m)
-  }
-  
-  beb = global.db.data.users[global.db.data.users[m.sender].pasangan]
-
-  if (typeof beb == "undefined"){
-    zidni.sendText(m.chat,`Berhasil putus hubungan dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}`,m, {
-        mentions: [global.db.data.users[m.sender].pasangan]
-    })
-    ayg.pasangan = ""
-  }
-
-  if (m.sender == beb.pasangan){
-    zidni.sendText(m.chat,`Berhasil putus hubungan dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}`,m, {
-        mentions: [global.db.data.users[m.sender].pasangan]
-    })
-    ayg.pasangan = ""
-    beb.pasangan = ""
-  }else {
-    zidni.reply(m.chat,`Anda tidak memiliki pasangan.`,m)
-  }
-}
-break
-case'tolak':{
-	if(isNaN(text)) {
-  	var number = text.split`@`[1]
-  } else if(!isNaN(text)) {
-  	var number = text
-  }
-
-  if(!text && !m.quoted) return zidni.reply(m.chat, `Masukan nomor, tag atau balas pesan target.`, m)
-  
-  if(isNaN(number)) return zidni.reply(m.chat, `Nomor yang anda masukan salah!`, m)
-  if(number.length > 15) return zidni.reply(m.chat, `Format salah!`, m)
-  try {
-		if(text) {
-			var user = number + '@s.whatsapp.net'
-		} else if(m.quoted.sender) {
-			var user = m.quoted.sender
-		} else if(m.mentionedJid) {
-  		  var user = number + '@s.whatsapp.net'
-			}  
-		} catch (e) {
-  } finally {
-    let groupMetadata = m.isGroup ? await zidni.groupMetadata(m.chat) : {}
-    let participants = m.isGroup ? groupMetadata.participants : []
-    let users = m.isGroup ? participants.find(u => u.id == user) : {}
-    if(!users) return zidni.reply(m.chat, `Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.`, m)
-    if(user === m.sender) return zidni.reply(m.chat, `Tidak bisa berpacaran dengan diri sendiri!`, m)
-    if(user === zidni.user.jid) return zidni.reply(m.chat, `*Tidak bisa berpacaran dengan saya t_t`, m)
-    
-    if(global.db.data.users[user].pasangan != m.sender){
-      zidni.sendText(m.chat,`Maaf @${user.split('@')[0]} tidak sedang menembak anda`,m, {
-        mentions:[user]
-      })
-    }else{
-      global.db.data.users[user].pasangan = ""
-      zidni.sendText(m.chat,`Anda baru saja menolak @${user.split('@')[0]} untuk menjadi pasangan anda!`,m, {
-        mentions:[user]
-      })
-    }
-	}	
-}
-break
-case'cekpacar':{
-  if(isNaN(text)) {
-		var number = text.split`@`[1]
-	}else if(!isNaN(text)) {
-		var number = text
-	}
-
-  if(number.length > 15 || (number.length < 9 && number.length > 0)) return zidni.reply(m.chat, `Maaf, Nomor yang anda masukan salah!`, m)
-
-  if (!text && !m.quoted){
-    user = m.sender
-    orang = "Kamu"
-  }else if(text) {
-    var user = number + '@s.whatsapp.net'
-    orang = "Orang yang kamu tag"
-  } else if(m.quoted.sender) {
-    var user = m.quoted.sender
-    orang = "Orang yang kamu balas"
-  } else if(m.mentionedJid) {
-    var user = number + '@s.whatsapp.net'
-    orang = "Orang yang kamu tag"
-  }
-
-  if (typeof global.db.data.users[user] == "undefined"){
-    return m.reply("Target tidak terdaftar di dalam database!")
-  }
-
-  if (typeof global.db.data.users[global.db.data.users[user].pasangan] == "undefined" && global.db.data.users[user].pasangan != ""){
-    return m.reply("Target tidak terdaftar di dalam database!")
-  }
-
-  if (global.db.data.users[user].pasangan == "") {
-    zidni.reply(m.chat, `${orang} tidak memiliki pasangan dan tidak sedang menembak siapapun\n\n*Ketik .tembak @user untuk menembak seseorang*`, m)
-  }else if (global.db.data.users[global.db.data.users[user].pasangan].pasangan != user){
-    zidni.sendText(m.chat, `${orang} sedang menunggu jawaban dari @${global.db.data.users[user].pasangan.split('@')[0]} karena sedang tidak diterima atau di tolak\n\nKetik *${usedPrefix}ikhlasin* untuk mengikhlaskan!`, m, {
-        mentions:[global.db.data.users[user].pasangan]
-    })
-  }else {
-    zidni.sendText(m.chat, `${orang} sedang menjalani hubungan dengan @${global.db.data.users[user].pasangan.split('@')[0]} 💓💓💓`, m, {
-        mentions:[global.db.data.users[user].pasangan]
-    })
-  }
-}
-break
+        
+        
 case'char':case'karakter': {
   if (!text) return m.reply( `Masukkan query!`)
   let res = await fetch(global.api('https://api.jikan.moe', '/v3/search/character', { q: text }))
@@ -607,10 +430,11 @@ break
 const more = String.fromCharCode(8206)
         const read = more.repeat(4001)
         let pacar = db.data.users[sender].pasangan
+let men = [sender,pacar]
         teks = `Hallo *@${sender.split("@")[0]}*
 *-* Limit: ${db.data.users[m.sender].limit}
 *-* Uang: Rp${db.data.users[sender].balance}
-*•* Pasangan: ${db.data.users[sender].pasangan ? `@${pacar.split("@")[0]}` :"❎"}
+*•* Pacar: ${db.data.users[sender].pasangan ? `@${pacar.split("@")[0]}` :"Jomblo"}
 *•* Total User: ${Object.keys(global.db.data.users).length}
 *•* Runtime: ${runtime(process.uptime())}
 *•* Web: https://m.zidni.xyz
@@ -624,6 +448,7 @@ _*メ Auto Download*_
 *•* tiktok
 *•* cocofun
 *•* mediafire
+*•* gdrive
 *•* pinterest
 *•* github
 
@@ -633,10 +458,11 @@ _*メ Search*_
 *•* joox
 *•* spotify
 *•* musik
+*•* sfile
 *•* repo
 *•* brainly
+*•* google
 *•* style
-*•* wait
 
 _*メ Rpg*_
 *•* jadian
@@ -681,10 +507,23 @@ _*メ Other*_
 *•* hidetag
 *•* autostiker
 *•* mute\n\n*𝑆𝑖𝑚𝑝𝑙𝑒 𝐵𝑜𝑡 𝑊ℎ𝑎𝑡𝑠𝐴𝑝𝑝 ッ*`,
-zidni.sendText(m.chat, teks, m, { mentions: [sender,pacar] })
+prep = generateWAMessageFromContent(m.chat, { liveLocationMessage: { 
+degreesLatitude:-7.6331314, 
+degreesLongitude: 109.6471820,
+caption: teks,
+sequenceNumber: 1656662972682001, 
+timeOffset: 8600, jpegThumbnail: null
+, contextInfo: { mentionedJid: men} }}, { quoted: m
+					})
+
+return zidni.relayMessage(m.chat, prep.message, { messageId: prep.key.id })
  
              }
 break
+
+
+
+
 case'neko':{
   let res = await fetch('https://api.waifu.pics/sfw/neko')
   if (!res.ok) throw await res.text()
@@ -1028,15 +867,59 @@ m.reply(`${q}`)}
 break
              case 'ytt':{
              m.reply(wet)
-             let anu = await fetchJson(`http://zekais-api.herokuapp.com/spotifydl?url=${q}&apikey=zekais`)
+             let anu = await fetchJson(`http://api.zekais.com/spotifydl?url=${q}&apikey=zekais`)
              zidni.sendMessage(m.chat, { audio: { url: anu.result }, mimetype: 'audio/mpeg', fileName: anu.title+'.mp3' }, { quoted: m })}
           break
+case'sfile':{
+if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
+			m.reply(wet)
+ if (args.length < 1) return m.reply(`Contoh:\n${command} WhatsApp`)
+let list_rows = [];
+let data1 = await fetchJson(`https://api.akuari.my.id/search/sfilesearch?query=${q}`)
+let data = data1.result
+for(let a of data) {
+list_rows.push({
+title: a.nama, description: `Ukuran: ${a.size}`, rowId: `sdl ${a.link}`})}
+const sections = [
+    {
+	title: "Sfile Search",
+	rows: list_rows
+	 },]
+   const listMessage = {
+  text: `Hasil Pencarian Dari ${q}`,
+  footer: `${pushname}`,
+  title: "",
+  buttonText: "Chose One",
+  sections
+}
+     zidni.sendMessage(from, listMessage,{ quoted: m })
+     db.data.users[m.sender].limit -= 5
+	}
+break			 
+case'sdl': {
+const cheerio = require( 'cheerio')
+reply(wet)
+async function sfileDl(url) {
+	let res = await fetch(url)
+	let $ = cheerio.load(await res.text())
+	let filename = $('div.w3-row-padding').find('img').attr('alt')
+	let mimetype = $('div.list').text().split(' - ')[1].split('\n')[0]
+	let filesize = $('#download').text().replace(/Download File/g, '').replace(/\(|\)/g, '').trim()
+	let download = $('#download').attr('href') + '&k=' + Math.floor(Math.random() * (15 - 10 + 1) + 10)
+	return { filename, filesize, mimetype, download }
+}
+		let res = await sfileDl(args[0])
+		if (!res) return reply( 'Error :/')
+	zidni.sendMessage(m.chat, { document: { url: res.download }, fileName: res.filename, mimetype: res.mimetype }, { quoted: m })
+	
+}
+break
              case'musik': case 'spotify':{
                if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 			m.reply(wet)
  if (args.length < 1) return m.reply(`Contoh:\n${command} Lily Alan Walker`)
 let list_rows = [];
-let data1 = await fetchJson(`http://zekais-api.herokuapp.com/spotifysr?query=${q}&apikey=zekais`)
+let data1 = await fetchJson(`http://api.zekais.com/spotifysr?query=${q}&apikey=zekais`)
 let data = data1.result
 for(let a of data) {
 list_rows.push({
@@ -1057,6 +940,35 @@ const sections = [
      db.data.users[m.sender].limit -= 5
 	}
 break			 
+case'ggh':{
+m.reply(`${q}`)}
+break
+case'ggs':case'google':{
+              if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
+			m.reply(wet)
+ if (args.length < 1) return m.reply(`Contoh:\n${command} Anime`)
+let list_rows = [];
+let data1 = await fetchJson(`https://api.akuari.my.id/search/google?query=${q}`)
+let data = data1.result
+for(let a of data) {
+list_rows.push({
+title: a.title, description: `${a.snippet}`, rowId: `ggh *Name:* ${a.title}\n*Link:* ${a.link}\n*Sinopsis:* ${a.snippet}`})}
+const sections = [
+    {
+	title: "Google Search",
+	rows: list_rows
+	 },]
+   const listMessage = {
+  text: `Hasil Pencarian Dari ${q}`,
+  footer: `${pushname}`,
+  title: "",
+  buttonText: "Chose One",
+  sections
+}
+     zidni.sendMessage(from, listMessage,{ quoted: m })
+     db.data.users[m.sender].limit -= 5
+	}
+break			
   case'joox':{
   if (!isPremium && global.db.data.users[m.sender].limit < 1) return zidni.sendBut(m.chat, end, `${pushname}`, 'Klaim', 'claim', m)// respon ketika limit habis
 		
@@ -1064,7 +976,7 @@ break
 const isUrl = str => /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi.test(str)
     if (!text) return m.reply( `*Perintah ini untuk mencari lagu joox berdasarkan pencarian*\n\ncontoh:\n${usedPrefix + command} alone`)
     if (isUrl(text)) return m.reply( `*Perintah ini untuk mencari lagu joox berdasarkan pencarian bukan link*\n\ncontoh:\n${usedPrefix + command} alone`)
-    let anu = await fetchJson(`http://zekais-api.herokuapp.com/spotify?query=${q}&apikey=zekais`)
+    let anu = await fetchJson(`http://api.zekais.com/spotify?query=${q}&apikey=zekais`)
      let pesan = `
 *Penyanyi:* ${anu.artists}
 *Judul:* ${anu.title}
@@ -1332,6 +1244,222 @@ break
                 db.data.users[m.sender].limit -= 5
             }
             break
+case'tembak':case'jadian':{
+	if(isNaN(text)) {
+  	var number = text.split`@`[1]
+  } else if(!isNaN(text)) {
+  	var number = text
+  }
+
+  if(!text && !m.quoted) return zidni.reply(m.chat, `Masukan nomor, tag target atau balas pesan target`, m)
+  
+  if(isNaN(number)) return zidni.reply(m.chat, `_*Nomor tidak valid.*_`, m)
+  if(number.length > 15) return zidni.reply(m.chat, `*_Format Tidak Valid.*_`, m)
+  try {
+		if(text) {
+			var user = number + '@s.whatsapp.net'
+		} else if(m.quoted.sender) {
+			var user = m.quoted.sender
+		} else if(m.mentionedJid) {
+  		  var user = number + '@s.whatsapp.net'
+			}  
+		} catch (e) {
+  } finally {
+    let groupMetadata = m.isGroup ? await zidni.groupMetadata(m.chat) : {}
+    let participants = m.isGroup ? groupMetadata.participants : []
+    let users = m.isGroup ? participants.find(u => u.id == user) : {}
+    if(!users) return zidni.reply(m.chat, `*_Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.*_`, m)
+    if(user === m.sender) return zidni.reply(m.chat, `_*Tidak bisa berpacaran dengan diri sendiri.*_`, m)
+    if(user === zidni.user.jid) return zidni.reply(m.chat, `_*Tidak bisa berpacaran dengan saya. :')*_`, m)
+
+    if (typeof global.db.data.users[user] == "undefined") return m.reply("_*Orang yang anda tag tidak terdaftar di dalam database.*_")
+    
+    if(global.db.data.users[m.sender].pasangan != "" && global.db.data.users[global.db.data.users[m.sender].pasangan].pasangan == m.sender && global.db.data.users[m.sender].pasangan != user){
+      zidni.sendText(m.chat,`Kamu sudah berpacaran dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}\n\nSilahkan putus dulu (ketik .putus untuk memutuskan hubungan) untuk menembak @${user.split('@')[0]}\n\nBtw yang setia dikit banget!`,m, {
+        mentions: [user,global.db.data.users[m.sender].pasangan]
+      })
+    }else if(global.db.data.users[user].pasangan != ""){
+      var pacar = global.db.data.users[user].pasangan
+      if (global.db.data.users[pacar].pasangan == user){
+        if (m.sender == pacar && global.db.data.users[m.sender].pasangan == user) return zidni.reply(m.chat,`Anda sudah berpacaran dengan @${beb.split('@')[0]}`,m,{contextInfo: {
+          mentions: [beb]
+        }})
+        zidni.sendText(m.chat,`Maaf, @${user.split('@')[0]} sudah berpacaran dengan @${pacar.split('@')[0]}\nSilahkan cari pasangan lain!`,m,{
+          mentions: [user,pacar]
+        })
+      }else{
+        global.db.data.users[m.sender].pasangan = user
+        zidni.sendText(m.chat,`Anda baru saja mengajak @${user.split('@')[0]} berpacaran\n\nSilahkan menunggu jawaban darinya!\n\nKetik *${usedPrefix}terima @user* untuk menerima\n*${usedPrefix}tolak @user untuk menolak*`,m,{
+          mentions: [user]
+        })
+      }
+    }else if (global.db.data.users[user].pasangan == m.sender){
+      global.db.data.users[m.sender].pasangan = user
+      zidni.sendText(m.chat,`Selamat anda resmi berpacaran dengan @${user.split('@')[0]}\n\nSemoga langgeng dan bahagia selalu 🥳🥳🥳`,m, {
+        mentions: [user]
+      })
+    }else {
+      global.db.data.users[m.sender].pasangan = user
+      zidni.sendText(m.chat,`Kamu baru saja mengajak @${user.split('@')[0]} berpacaran\n\nSilahkan menunggu jawaban darinya!\n\nKetik *${usedPrefix}terima @user* untuk menerima\n*${usedPrefix}tolak @user untuk menolak*`,m,{
+        mentions: [user]
+      })
+    }
+	}	
+}
+break
+case'terima':{
+	if(isNaN(text)) {
+  	var number = text.split`@`[1]
+  } else if(!isNaN(text)) {
+  	var number = text
+  }
+
+  if(!text && !m.quoted) return zidni.reply(m.chat, `Berikan nomor, tag atau balas pesan target.`, m)
+  
+  if(isNaN(number)) return zidni.reply(m.chat, `Nomor yang anda masukan tidak salah!`, m)
+  if(number.length > 15) return zidni.reply(m.chat, `Format salah!`, m)
+  try {
+		if(text) {
+			var user = number + '@s.whatsapp.net'
+		} else if(m.quoted.sender) {
+			var user = m.quoted.sender
+		} else if(m.mentionedJid) {
+  		  var user = number + '@s.whatsapp.net'
+			}  
+		} catch (e) {
+  } finally {
+    let groupMetadata = m.isGroup ? await zidni.groupMetadata(m.chat) : {}
+    let participants = m.isGroup ? groupMetadata.participants : []
+    let users = m.isGroup ? participants.find(u => u.id == user) : {}
+    if(!users) return zidni.reply(m.chat, `Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.`, m)
+    if(user === m.sender) return zidni.reply(m.chat, `Tidak bisa berpacaran dengan diri sendiri!`, m)
+    if(user === zidni.user.jid) return zidni.reply(m.chat, `Tidak bisa berpacaran dengan saya t_t`, m)
+    
+    if(global.db.data.users[user].pasangan != m.sender){
+      zidni.sendText(m.chat,`Maaf @${user.split('@')[0]} tidak sedang menembak anda`,m, {
+        mentions: [user]
+      })
+    }else{
+      global.db.data.users[m.sender].pasangan = user
+      zidni.sendText(m.chat,`Selamat anda resmi berpacaran dengan @${user.split('@')[0]}\n\nSemoga langgeng dan bahagia selalu @${user.split('@')[0]} 💓 @${m.sender.split('@')[0]} 🥳🥳🥳`,m, {
+        mentions: [m.sender,user]
+      })
+    }
+	}	
+}
+break
+case 'putus':{
+  ayg = global.db.data.users[m.sender]
+
+  if(ayg.pasangan == ""){
+    return zidni.reply(m.chat,`Anda tidak memiliki pasangan.`,m)
+  }
+  
+  beb = global.db.data.users[global.db.data.users[m.sender].pasangan]
+
+  if (typeof beb == "undefined"){
+    zidni.sendText(m.chat,`Berhasil putus hubungan dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}`,m, {
+        mentions: [global.db.data.users[m.sender].pasangan]
+    })
+    ayg.pasangan = ""
+  }
+
+  if (m.sender == beb.pasangan){
+    zidni.sendText(m.chat,`Berhasil putus hubungan dengan @${global.db.data.users[m.sender].pasangan.split('@')[0]}`,m, {
+        mentions: [global.db.data.users[m.sender].pasangan]
+    })
+    ayg.pasangan = ""
+    beb.pasangan = ""
+  }else {
+    zidni.reply(m.chat,`Anda tidak memiliki pasangan.`,m)
+  }
+}
+break
+case'tolak':{
+	if(isNaN(text)) {
+  	var number = text.split`@`[1]
+  } else if(!isNaN(text)) {
+  	var number = text
+  }
+
+  if(!text && !m.quoted) return zidni.reply(m.chat, `Masukan nomor, tag atau balas pesan target.`, m)
+  
+  if(isNaN(number)) return zidni.reply(m.chat, `Nomor yang anda masukan salah!`, m)
+  if(number.length > 15) return zidni.reply(m.chat, `Format salah!`, m)
+  try {
+		if(text) {
+			var user = number + '@s.whatsapp.net'
+		} else if(m.quoted.sender) {
+			var user = m.quoted.sender
+		} else if(m.mentionedJid) {
+  		  var user = number + '@s.whatsapp.net'
+			}  
+		} catch (e) {
+  } finally {
+    let groupMetadata = m.isGroup ? await zidni.groupMetadata(m.chat) : {}
+    let participants = m.isGroup ? groupMetadata.participants : []
+    let users = m.isGroup ? participants.find(u => u.id == user) : {}
+    if(!users) return zidni.reply(m.chat, `Target atau Nomor tidak ditemukan, mungkin sudah keluar atau bukan anggota grup ini.`, m)
+    if(user === m.sender) return zidni.reply(m.chat, `Tidak bisa berpacaran dengan diri sendiri!`, m)
+    if(user === zidni.user.jid) return zidni.reply(m.chat, `*Tidak bisa berpacaran dengan saya t_t`, m)
+    
+    if(global.db.data.users[user].pasangan != m.sender){
+      zidni.sendText(m.chat,`Maaf @${user.split('@')[0]} tidak sedang menembak anda`,m, {
+        mentions:[user]
+      })
+    }else{
+      global.db.data.users[user].pasangan = ""
+      zidni.sendText(m.chat,`Anda baru saja menolak @${user.split('@')[0]} untuk menjadi pasangan anda!`,m, {
+        mentions:[user]
+      })
+    }
+	}	
+}
+break
+case'cekpacar':{
+  if(isNaN(text)) {
+		var number = text.split`@`[1]
+	}else if(!isNaN(text)) {
+		var number = text
+	}
+
+  if(number.length > 15 || (number.length < 9 && number.length > 0)) return zidni.reply(m.chat, `Maaf, Nomor yang anda masukan salah!`, m)
+
+  if (!text && !m.quoted){
+    user = m.sender
+    orang = "Kamu"
+  }else if(text) {
+    var user = number + '@s.whatsapp.net'
+    orang = "Orang yang kamu tag"
+  } else if(m.quoted.sender) {
+    var user = m.quoted.sender
+    orang = "Orang yang kamu balas"
+  } else if(m.mentionedJid) {
+    var user = number + '@s.whatsapp.net'
+    orang = "Orang yang kamu tag"
+  }
+
+  if (typeof global.db.data.users[user] == "undefined"){
+    return m.reply("Target tidak terdaftar di dalam database!")
+  }
+
+  if (typeof global.db.data.users[global.db.data.users[user].pasangan] == "undefined" && global.db.data.users[user].pasangan != ""){
+    return m.reply("Target tidak terdaftar di dalam database!")
+  }
+
+  if (global.db.data.users[user].pasangan == "") {
+    zidni.reply(m.chat, `${orang} tidak memiliki pasangan dan tidak sedang menembak siapapun\n\n*Ketik .tembak @user untuk menembak seseorang*`, m)
+  }else if (global.db.data.users[global.db.data.users[user].pasangan].pasangan != user){
+    zidni.sendText(m.chat, `${orang} sedang menunggu jawaban dari @${global.db.data.users[user].pasangan.split('@')[0]} karena sedang tidak diterima atau di tolak\n\nKetik *${usedPrefix}ikhlasin* untuk mengikhlaskan!`, m, {
+        mentions:[global.db.data.users[user].pasangan]
+    })
+  }else {
+    zidni.sendText(m.chat, `${orang} sedang menjalani hubungan dengan @${global.db.data.users[user].pasangan.split('@')[0]} 💓💓💓`, m, {
+        mentions:[global.db.data.users[user].pasangan]
+    })
+  }
+}
+break
         default:
                 if (budy.startsWith('=>')) {
                     if (!isOwner) return m.reply(mess.owner)
