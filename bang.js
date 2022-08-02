@@ -1383,8 +1383,8 @@ case 'ttaud':	case 'ttaudio': case 'tiktokaudio':{
            let res = await y2mateA(teks).catch(e => {
             m.reply('_[ ! ] Error Gagal Memasuki Web Y2mate_')
 })
-           zidni.sendMessage(from, { audio: { url: res[0].link },mimetype: 'audio/mp4', }, { quoted : m})}
-                  break
+            zidni.sendMessage(from, { audio: { url: res[0].link },mimetype: 'audio/mp4', }, { quoted : m})}
+           break
                          	case 'setpp':
 			case 'setppbot': {
                 if (!isOwner) return m.reply(mess.owner)
